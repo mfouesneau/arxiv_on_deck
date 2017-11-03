@@ -855,7 +855,7 @@ if __name__ == "__main__":
 
     options = running_options()
     papers = get_new_papers()
-    mitarbeiter_list = options['mitarbeiter']
+    mitarbeiter_list = options.get('mitarbeiter', './mitarbeiter.txt')
     mitarbeiter = get_mitarbeiter(mitarbeiter_list)
     keep = filter_papers(papers, mitarbeiter)
     for paper in keep:
