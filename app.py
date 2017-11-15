@@ -508,14 +508,7 @@ class DocumentSource(Document):
 
     def __init__(self, directory):
         fnames = glob(directory + '/*.tex')
-        if (len(fnames) > 1):
-            print('multiple tex files')
-            for e, fname in enumerate(fnames):
-                print(e, fname)
-            select = input("which file is the main document? ")
-        else:
-            select = 0
-        fname = fnames[int(select)]
+        fname = self._auto_select_main_doc(fnames)
 
         with open(fname, 'r') as finput:
             Document.__init__(self, finput.read())
@@ -523,6 +516,29 @@ class DocumentSource(Document):
         self.fname = fname
         self.directory = directory
         self.outputname = self.fname[:-len('.tex')] + '_cleaned.tex' 
+
+    def _auto_select_main_doc(self, fnames):
+        if (len(fnames) == 1):
+            return fnames[0]
+
+        print('multiple tex files')
+        selected = None
+        for e, fname in enumerate(fnames):
+            with open(fname, 'r') as finput:
+                if 'documentclass' in finput.read():
+                    selected = e, fname
+                    break
+        if selected is not None:
+            print("Found main document in: ", selected[1])
+            print(e, fname)
+        if selected is not None:
+            return selected[1]
+        else:
+            print('Could not locate the main document automatically. Little help please!')
+            for e, fname in enumerate(fnames):
+                print(e, fname)
+            select = input("which file is the main document? ")
+            return fnames[int(select)]
 
     def __repr__(self):
         return '''Paper in {0:s}, \n\t{1:s}'''.format(self.fname,
