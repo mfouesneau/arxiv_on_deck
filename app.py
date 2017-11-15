@@ -806,16 +806,17 @@ def get_mitarbeiter(source='./mitarbeiter.txt'):
     with open(source) as fin:
         mitarbeiter = []
         for name in fin:
-            names = name.split()
-            shortname = []
-            for name in names[:-1]:
-                if '-' in name:
-                    rest = '-'.join([w[0] + '.' for w in name.split('-')])
-                else:
-                    rest = name[0] + '.'
-                shortname.append(rest)
-            shortname.append(names[-1])
-            mitarbeiter.append(' '.join(shortname))
+            if name[0] != '#':   # Comment line
+                names = name.split()
+                shortname = []
+                for name in names[:-1]:
+                    if '-' in name:
+                        rest = '-'.join([w[0] + '.' for w in name.split('-')])
+                    else:
+                        rest = name[0] + '.'
+                    shortname.append(rest)
+                shortname.append(names[-1])
+                mitarbeiter.append(' '.join(shortname))
     return list(sorted(set(mitarbeiter)))
 
 
