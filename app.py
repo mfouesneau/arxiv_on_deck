@@ -631,16 +631,19 @@ class ArxivListHTMLParser(HTMLParser):
     """ generates a list of Paper items by parsing the Arxiv new page """
 
     def __init__(self, *args, **kwargs):
+        skip_replacements = kwargs.pop('skip_replacements', False)
         HTMLParser.__init__(self, *args, **kwargs)
         self.papers = []
         self.current_paper = None
         self._paper_item = False
         self._title_tag = False
         self._author_tag = False
+        self.skip_replacements = skip_replacements
+        self._skip = False
 
     def handle_starttag(self, tag, attrs):
         # paper starts with a dt tag
-        if tag in ('dt'):
+        if (tag in ('dt') and not self._skip):
             if self.current_paper:
                 self.papers.append(self.current_paper)
             self._paper_item = True
@@ -658,6 +661,8 @@ class ArxivListHTMLParser(HTMLParser):
     def handle_data(self, data):
         if data.strip() in (None, "", ','):
             return
+        if 'replacement for' in data.lower():
+            self._skip = (True & self.skip_replacements)
         if self._paper_item:
             if 'arXiv:' in data:
                 self.current_paper.identifier = data
@@ -775,8 +780,12 @@ class ArXivPaper(object):
         print("PDF postage:", identifier + '.pdf' )
 
 
-def get_new_papers():
+def get_new_papers(skip_replacements=False):
     """ retrieve the new list from the website 
+    Parameters
+    ----------
+    skip_replacements: bool
+        set to skip parsing the replacements
 
     Returns
     -------
@@ -786,7 +795,7 @@ def get_new_papers():
     url = "https://arxiv.org/list/astro-ph/new"
     html = urlopen(url).read().decode('utf-8')
 
-    parser = ArxivListHTMLParser()
+    parser = ArxivListHTMLParser(skip_replacements=skip_replacements)
     parser.feed(html)
     papers = parser.papers
     return papers
@@ -871,7 +880,7 @@ def running_options():
 if __name__ == "__main__":
 
     options = running_options()
-    papers = get_new_papers()
+    papers = get_new_papers(skip_replacements=True)
     mitarbeiter_list = options.get('mitarbeiter', './mitarbeiter.txt')
     mitarbeiter = get_mitarbeiter(mitarbeiter_list)
     keep = filter_papers(papers, mitarbeiter)
