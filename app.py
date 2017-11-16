@@ -463,7 +463,7 @@ class ExportPDFLatexTemplate(object):
 \end{document}
 """
 
-    compiler = r"pdflatex"
+    compiler = r"TEXINPUTS='../deprecated_tex:' pdflatex"
     compiler_options = r"-enable-write18 -shell-escape -interaction=nonstopmode"
 
     def short_authors(self, document):
