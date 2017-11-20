@@ -139,7 +139,7 @@
 \frame{%
   \begin{minipage}[t][0.5\Hi][t]{2\Wi}%
     \vspace*{\fill}
-    {\centering \figone}  % put contents here
+    {\begin{center}\figone\end{center}}  % put contents here
     \capone
     \vspace*{\fill} \ 
   \end{minipage}}% 
@@ -149,14 +149,14 @@
     \frame{\ %
       \begin{minipage}[t][0.5\Hi][t]{\Wi-\gap}
         \vspace*{\fill}
-      	{\centering\figtwo}\par
+      	{\begin{center}\figtwo\end{center}}
         \captwo
       	\vspace*{\fill} \ 
       \end{minipage}}
     \frame{\ %
       \begin{minipage}[t][0.5\Hi][t]{\Wi-\gap}
     	   \vspace*{\fill}
-           {\centering\figthree}
+           {\begin{center}\figthree\end{center}}
 	   \capthree
   	   \vspace*{\fill}
    	 \end{minipage}}

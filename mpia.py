@@ -23,7 +23,7 @@ class MPIATemplate(ExportPDFLatexTemplate):
             fig += r"    \includegraphics[width=\maxwidth, height=\maxheight,keepaspectratio]{"
             fig += fname + r"}\\" + "\n"
         if len(figure.files) > 1:
-            fig = fig.replace(r'\maxwidth', '{0:0.1f}'.format(0.95 * 1. / len(figure.files)) + r'\maxwidth')
+            fig = fig.replace(r'\maxwidth', '{0:0.1f}'.format(0.9 * 1. / len(figure.files)) + r'\maxwidth')
         caption = r"""    \caption{Fig. """ + str(figure._number) + """: """ + figure.caption + r"""}"""
         return fig, caption
 
@@ -45,7 +45,7 @@ class MPIATemplate(ExportPDFLatexTemplate):
             if where == 'ONE':
                 special = fig.replace(r"[width=\maxwidth, height=\maxheight,keepaspectratio]", "")
                 txt = txt.replace('<FILE_FIGURE_ONE>', special)
-                fig = fig.replace(r'\\', '') + r'\\'
+            fig = fig.replace(r'\\', '')
             txt = txt.replace('<FIGURE_{0:s}>'.format(where), fig)
             txt = txt.replace('<CAPTION_{0:s}>'.format(where), caption)
         if '<CAPTION_TWO>' in txt:
