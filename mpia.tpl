@@ -45,6 +45,7 @@
 \renewcommand{\caption}[1]{{\raggedright\scriptsize{#1}}}
 \providecommand{\acronymused}[1]{}
 \providecommand{\altaffilmark}[1]{}
+\providecommand{\keywords}{}
 
 % Layout definition --------------------------------------------------------
 % sets some dimensions
@@ -62,7 +63,8 @@
 \newsavebox\boxFigOne
 
 % debugging macros
-\renewcommand{\frame}{}   % using lines around frames for layout debugging
+% \renewcommand{\frame}{}   % using lines around frames for layout debugging
+\renewcommand{\frame}[1]{\colorbox{white}{#1}}   % using lines around frames for layout debugging
 
 %Document found macros ------------------------------------------------------
 <MACROS>
@@ -120,21 +122,24 @@
 % -----------
 
 % store the figure into a box to retrieve properties
-\savebox{\boxFigOne}{\figone}
+\savebox{\boxFigOne}{<FILE_FIGURE_ONE>}
 
 % For DEBUGGING \pgfmathsetmacro{\ratio}{\the\ht\boxFigOne/\the\wd\boxFigOne}
 % \pgfmathsetmacro{\ratio}{\the\wd\boxFigOne/\the\ht\boxFigOne}
 % \pgfmathparse{\ratio > 1?int(1):int(0)}
-\pgfmathparse{\the\wd\boxFigOne/\the\ht\boxFigOne > 1?int(1):int(0)}
+Ratio: \ratio
+\pgfmathparse{\the\wd\boxFigOne/\the\ht\boxFigOne > 1.2 ? int(1):int(0)}
 
 
 % test orientation
 \ifnum\pgfmathresult=1\relax% 
 % ------------------------------------------------------------------ {landscape}
+\def\maxheight{0.3\paperheight}
+\def\maxwidth{\textwidth}
 \frame{%
   \begin{minipage}[t][0.5\Hi][t]{2\Wi}%
     \vspace*{\fill}
-    \figone  % put contents here
+    {\centering \figone}  % put contents here
     \capone
     \vspace*{\fill} \ 
   \end{minipage}}% 
@@ -144,40 +149,43 @@
     \frame{\ %
       \begin{minipage}[t][0.5\Hi][t]{\Wi-\gap}
         \vspace*{\fill}
-      	\figtwo\par
+      	{\centering\figtwo}\par
         \captwo
       	\vspace*{\fill} \ 
       \end{minipage}}
     \frame{\ %
       \begin{minipage}[t][0.5\Hi][t]{\Wi-\gap}
     	   \vspace*{\fill}
-           \figthree
+           {\centering\figthree}
 	   \capthree
   	   \vspace*{\fill}
    	 \end{minipage}}
 	\end{minipage}}
 \else
 % ------------------------------------------------------------------ {portrait}
+	\def\maxheight{0.5\paperheight}
+	\def\maxwidth{\textwidth}
 	\frame{%
   	\begin{minipage}[b][1\Hi][t]{1\Wi}%
-      \vspace*{\fill}
-         {\figone}  % put contents here
+         \vspace*{\fill}
+         {\centering \figone}  % put contents here
          \capone
          \vspace*{\fill} \ 
 		\end{minipage}}%
 	\fbox{%
+		\def\maxheight{0.3\paperheight}
 		\begin{minipage}[b][1\Hi][t]{\Wi+1\gap}
  			\frame{\ %
         \begin{minipage}[t][0.5\Hi][t]{\Wi}
       	\vspace*{\fill}
-           {\figtwo}\par
+           {\centering\figtwo}\par
           \captwo
          \vspace*{\fill} \ 
  		 	\end{minipage}}
  			\frame{\ %
     		\begin{minipage}[t][0.5\Hi][t]{\Wi}
 				  \vspace*{\fill}
-          	{\figthree}
+          	{\centering\figthree}
             \capthree
             \vspace*{\fill} \ 
         \end{minipage}}
@@ -186,9 +194,9 @@
 			  
 % add bottom text -------------------------------------------------------------------
 \frame{
-	\begin{minipage}[b][0.05\Hi][b]{2\Wi}
-		\hl{<DATE>} -- <COMMENTS>
-	\end{minipage}
+  \begin{minipage}[b][0.05\Hi][b]{2\Wi}
+	\hl{<DATE>} -- <COMMENTS>
+   \end{minipage}
 }
 
 \end{document}

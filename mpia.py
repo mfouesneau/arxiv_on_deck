@@ -20,14 +20,16 @@ class MPIATemplate(ExportPDFLatexTemplate):
     def figure_to_latex(self, figure):
         fig = ""
         for fname in figure.files:
-            fig += r"    \includegraphics[width=\textwidth,keepaspectratio]{"
+            fig += r"    \includegraphics[width=\maxwidth, height=\maxheight,keepaspectratio]{"
             fig += fname + r"}\\" + "\n"
+        if len(figure.files) > 1:
+            fig = fig.replace(r'\maxwidth', '{0:0.1f}'.format(0.95 * 1. / len(figure.files)) + r'\maxwidth')
         caption = r"""    \caption{Fig. """ + str(figure._number) + """: """ + figure.caption + r"""}"""
         return fig, caption
 
     def apply_to_document(self, document):
 
-        txt = self.template.replace('<MACROS>', "")    # document._macros)
+        txt = self.template.replace('<MACROS>', document._macros)
         if document._identifier is not None:
             txt = txt.replace('<IDENTIFIER>',
                               r'\hl{{{0:s}}}'.format(document._identifier) or 'Abstract ')
@@ -40,8 +42,14 @@ class MPIATemplate(ExportPDFLatexTemplate):
         for where, figure in zip('ONE TWO THREE'.split(),
                                  self.select_figures(document, N=3)):
             fig, caption = self.figure_to_latex(figure)
+            if where == 'ONE':
+                special = fig.replace(r"[width=\maxwidth, height=\maxheight,keepaspectratio]", "")
+                txt = txt.replace('<FILE_FIGURE_ONE>', special)
             txt = txt.replace('<FIGURE_{0:s}>'.format(where), fig)
             txt = txt.replace('<CAPTION_{0:s}>'.format(where), caption)
+        if '<CAPTION_THREE>' in txt:
+            txt = txt.replace('<FIGURE_THREE>', '')
+            txt = txt.replace('<CAPTION_THREE>', '')
 
         txt = txt.replace('<COMMENTS>', document.comment or '')
         txt = txt.replace('<DATE>', document.date)
