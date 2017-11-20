@@ -127,7 +127,7 @@
 % For DEBUGGING \pgfmathsetmacro{\ratio}{\the\ht\boxFigOne/\the\wd\boxFigOne}
 % \pgfmathsetmacro{\ratio}{\the\wd\boxFigOne/\the\ht\boxFigOne}
 % \pgfmathparse{\ratio > 1?int(1):int(0)}
-Ratio: \ratio
+% Ratio: \ratio
 \pgfmathparse{\the\wd\boxFigOne/\the\ht\boxFigOne > 1.2 ? int(1):int(0)}
 
 
