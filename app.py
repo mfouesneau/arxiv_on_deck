@@ -475,7 +475,7 @@ class ExportPDFLatexTemplate(object):
                 reverse=True)
         return selection[:N]
 
-    def figure_to_latex(self, figure):
+    def figure_to_latex(self, figure, size=r'0.32\textwidth'):
         txt = r"""\begin{minipage}{0.32\textwidth}""" + '\n'
         for fname in figure.files:
             txt += r"    \includegraphics[width=\textwidth, height=0.4\textheight,keepaspectratio]{"
@@ -483,6 +483,15 @@ class ExportPDFLatexTemplate(object):
         txt += r"""    \caption{Fig. """ + str(figure._number) + """: """ + figure.caption + r"""}"""
         txt += '\n' + """\end{minipage}""" + '\n%\n'
         return txt
+        '''
+        txt = r"""\resizebox{{{0:s}}}{!}{""".format(size) + '\n'
+        for fname in figure.files:
+            txt += r"\includegraphics[width=\textwidth, height=0.4\textheight,keepaspectratio]{"
+            txt += fname + r"}\\" + "\n"
+        txt += r"""    \caption{Fig. """ + str(figure._number) + """: """ + figure.caption + r"""}"""
+        txt += '\n' + """}""" + '\n%\n'
+        return txt
+        '''
 
     def apply_to_document(self, document):
 

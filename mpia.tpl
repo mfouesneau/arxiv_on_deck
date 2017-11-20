@@ -65,28 +65,7 @@
 \renewcommand{\frame}{}   % using lines around frames for layout debugging
 
 %Document found macros ------------------------------------------------------
-\def\aap{AA}
-\def\aapr{AA Rev}
-\def\apjl{ApJL}
-\def\apss{APSS}
-\def\araa{ARA{\&}A}
-\def\mnras{MNRAS}
-\def\apj{ApJ}
-\def\apjs{ApJS}
-\def\aaps{ApJS}
-\def\aj{AJ}
-\def\jcap{JCAP}
-\def\pasp{PASP}
-\def\pasj{PASJ}
-\def\procspie{Proc.~SPIE}
-\def\nat{Nat}
-\def\memsai{MmSAI}
-
-\def\zs{{z_{\rm s}}}
-\def\zl{{z_{\rm l}}}
-\def\ase{{\prime\prime}}
-\def\Jxy{{WGD2038-4008}~}
-\def\Jxytwo{{WGD2021-4115}~}
+<MACROS>
 
 % ----------------------------------------------------------------------------------
 \begin{document}
@@ -141,19 +120,21 @@
 % -----------
 
 % store the figure into a box to retrieve properties
-\savebox{\boxFigOne}{here \includegraphics[width=3cm,height=3cm]{\figone}}
+\savebox{\boxFigOne}{\figone}
 
 % For DEBUGGING \pgfmathsetmacro{\ratio}{\the\ht\boxFigOne/\the\wd\boxFigOne}
-\pgfmathsetmacro{\ratio}{\the\wd\boxFigOne/\the\ht\boxFigOne}
-\pgfmathparse{\ratio > 1?int(1):int(0)}
+% \pgfmathsetmacro{\ratio}{\the\wd\boxFigOne/\the\ht\boxFigOne}
+% \pgfmathparse{\ratio > 1?int(1):int(0)}
+\pgfmathparse{\the\wd\boxFigOne/\the\ht\boxFigOne > 1?int(1):int(0)}
+
 
 % test orientation
 \ifnum\pgfmathresult=1\relax% 
 % ------------------------------------------------------------------ {landscape}
 \frame{%
   \begin{minipage}[t][0.5\Hi][t]{2\Wi}%
-  	\vspace*{\fill}
-    \includegraphics[width=\textwidth]{\figone}  % put contents here
+    \vspace*{\fill}
+    \figone  % put contents here
     \capone
     \vspace*{\fill} \ 
   \end{minipage}}% 
@@ -162,16 +143,16 @@
   \begin{minipage}[t][0.49\Hi][t]{2\Wi+\gap}
     \frame{\ %
       \begin{minipage}[t][0.5\Hi][t]{\Wi-\gap}
-  		\vspace*{\fill}
-      	\includegraphics[width=\textwidth]{\figtwo}\par
+        \vspace*{\fill}
+      	\figtwo\par
         \captwo
       	\vspace*{\fill} \ 
       \end{minipage}}
     \frame{\ %
       \begin{minipage}[t][0.5\Hi][t]{\Wi-\gap}
-    		\vspace*{\fill}
-        \includegraphics[width=\textwidth]{\figthree}
-	      \capthree
+    	   \vspace*{\fill}
+           \figthree
+	   \capthree
   	   \vspace*{\fill}
    	 \end{minipage}}
 	\end{minipage}}
@@ -180,7 +161,7 @@
 	\frame{%
   	\begin{minipage}[b][1\Hi][t]{1\Wi}%
       \vspace*{\fill}
-         \includegraphics[width=\textwidth]{\figone}  % put contents here
+         {\figone}  % put contents here
          \capone
          \vspace*{\fill} \ 
 		\end{minipage}}%
@@ -189,14 +170,14 @@
  			\frame{\ %
         \begin{minipage}[t][0.5\Hi][t]{\Wi}
       	\vspace*{\fill}
-           \includegraphics[width=\textwidth]{\figtwo}\par
+           {\figtwo}\par
           \captwo
          \vspace*{\fill} \ 
  		 	\end{minipage}}
  			\frame{\ %
     		\begin{minipage}[t][0.5\Hi][t]{\Wi}
 				  \vspace*{\fill}
-          	\includegraphics[width=\textwidth]{\figthree}
+          	{\figthree}
             \capthree
             \vspace*{\fill} \ 
         \end{minipage}}

@@ -40,8 +40,8 @@ class MPIATemplate(ExportPDFLatexTemplate):
         for where, figure in zip('ONE TWO THREE'.split(),
                                  self.select_figures(document, N=3)):
             fig, caption = self.figure_to_latex(figure)
-            txt.replace('FIGURE_{0:s}'.format(where), fig)
-            txt.replace('CAPTION_{0:s}'.format(where), caption)
+            txt = txt.replace('<FIGURE_{0:s}>'.format(where), fig)
+            txt = txt.replace('<CAPTION_{0:s}>'.format(where), caption)
 
         txt = txt.replace('<COMMENTS>', document.comment or '')
         txt = txt.replace('<DATE>', document.date)
