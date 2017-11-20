@@ -134,7 +134,7 @@
 % test orientation
 \ifnum\pgfmathresult=1\relax% 
 % ------------------------------------------------------------------ {landscape}
-\def\maxheight{0.3\paperheight}
+\def\maxheight{0.25\paperheight}
 \def\maxwidth{\textwidth}
 \frame{%
   \begin{minipage}[t][0.5\Hi][t]{2\Wi}%
@@ -163,7 +163,7 @@
 	\end{minipage}}
 \else
 % ------------------------------------------------------------------ {portrait}
-	\def\maxheight{0.5\paperheight}
+	\def\maxheight{0.4\paperheight}
 	\def\maxwidth{\textwidth}
 	\frame{%
   	\begin{minipage}[b][1\Hi][t]{1\Wi}%

@@ -45,8 +45,12 @@ class MPIATemplate(ExportPDFLatexTemplate):
             if where == 'ONE':
                 special = fig.replace(r"[width=\maxwidth, height=\maxheight,keepaspectratio]", "")
                 txt = txt.replace('<FILE_FIGURE_ONE>', special)
+                fig = fig.replace(r'\\', '') + r'\\'
             txt = txt.replace('<FIGURE_{0:s}>'.format(where), fig)
             txt = txt.replace('<CAPTION_{0:s}>'.format(where), caption)
+        if '<CAPTION_TWO>' in txt:
+            txt = txt.replace('<FIGURE_TWO>', '')
+            txt = txt.replace('<CAPTION_TWO>', '')
         if '<CAPTION_THREE>' in txt:
             txt = txt.replace('<FIGURE_THREE>', '')
             txt = txt.replace('<CAPTION_THREE>', '')
