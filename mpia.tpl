@@ -139,7 +139,7 @@
 \frame{%
   \begin{minipage}[t][0.5\Hi][t]{2\Wi}%
     \vspace*{\fill}
-    {\begin{center}\figone\end{center}}  % put contents here
+    {\begin{center}\figone\end{center}}\\  % put contents here
     \capone
     \vspace*{\fill} \ 
   \end{minipage}}% 
@@ -149,47 +149,47 @@
     \frame{\ %
       \begin{minipage}[t][0.5\Hi][t]{\Wi-\gap}
         \vspace*{\fill}
-      	{\begin{center}\figtwo\end{center}}
+	{\begin{center}\figtwo\end{center}}\\
         \captwo
-      	\vspace*{\fill} \ 
+	\vspace*{\fill} \ 
       \end{minipage}}
     \frame{\ %
       \begin{minipage}[t][0.5\Hi][t]{\Wi-\gap}
-    	   \vspace*{\fill}
-           {\begin{center}\figthree\end{center}}
+	   \vspace*{\fill}
+           {\begin{center}\figthree\end{center}}\\
 	   \capthree
-  	   \vspace*{\fill}
-   	 \end{minipage}}
+	   \vspace*{\fill}
+	 \end{minipage}}
 	\end{minipage}}
 \else
 % ------------------------------------------------------------------ {portrait}
 	\def\maxheight{0.4\paperheight}
 	\def\maxwidth{\textwidth}
 	\frame{%
-  	\begin{minipage}[b][1\Hi][t]{1\Wi}%
+	\begin{minipage}[b][1\Hi][t]{1\Wi}%
          \vspace*{\fill}
-         {\centering \figone}  % put contents here
+	 {\begin{center}\figone\end{center}}\\  % put contents here
          \capone
          \vspace*{\fill} \ 
 		\end{minipage}}%
 	\fbox{%
 		\def\maxheight{0.3\paperheight}
 		\begin{minipage}[b][1\Hi][t]{\Wi+1\gap}
- 			\frame{\ %
+			\frame{\ %
         \begin{minipage}[t][0.5\Hi][t]{\Wi}
-      	\vspace*{\fill}
-           {\centering\figtwo}\par
+	\vspace*{\fill}
+	  {\begin{center}\figtwo\end{center}}\\
           \captwo
          \vspace*{\fill} \ 
- 		 	\end{minipage}}
- 			\frame{\ %
-    		\begin{minipage}[t][0.5\Hi][t]{\Wi}
+			\end{minipage}}
+			\frame{\ %
+		\begin{minipage}[t][0.5\Hi][t]{\Wi}
 				  \vspace*{\fill}
-          	{\centering\figthree}
-            \capthree
+		{\begin{center}\figthree\end{center}}\\
+            \capthree\\
             \vspace*{\fill} \ 
         \end{minipage}}
-  	\end{minipage}}
+	\end{minipage}}
 \fi
 			  
 % add bottom text -------------------------------------------------------------------
