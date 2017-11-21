@@ -29,8 +29,10 @@
 % convert files on the fly to pdflatex compilation
 % requires `-enable-write18 -shell-escape`' compilation options
 \DeclareGraphicsExtensions{.jpg, .ps, .eps, .png, .pdf}
-\DeclareGraphicsRule{.ps}{pdf}{.pdf}{`convert #1 pdf:`dirname #1`/`basename #1 .ps`-ps-converted-to.pdf}
-\DeclareGraphicsRule{.eps}{pdf}{.pdf}{`convert #1 pdf:`dirname #1`/`basename #1 .eps`-eps-converted-to.pdf}
+\DeclareGraphicsRule{.ps}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .ps`-ps-converted-to.pdf}
+\DeclareGraphicsRule{.eps}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .eps`-eps-converted-to.pdf}
+\DeclareGraphicsRule{.pdf}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .pdf`-pdf-converted-to.pdf}
+\DeclareGraphicsRule{.png}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .png`-png-converted-to.pdf}
 
 % highlight in yellow some text (e.g., authors)
 \newcommand\hl[1]{\colorbox{yellow}{#1}}
