@@ -198,34 +198,39 @@ class Figure(object):
         """ Parse the code for specific commands """
         commands = 'caption', 'label', 'includegraphics', 'plotone'
         info = {}
-        # careful with subfigure...
-        if 'subfigure' in self._code:
-            found = []
-            for match in re.compile(r'subfigure.*').finditer(self._code):
-                start, end = match.span()
-                newcode = balanced_braces(self._code[start:end])[0]
+        try:
+            # careful with subfigure...
+            if 'subfigure' in self._code:
+                found = []
+                for match in re.compile(r'subfigure.*').finditer(self._code):
+                    start, end = match.span()
+                    newcode = balanced_braces(self._code[start:end])[0]
+                    for command in commands:
+                        try:
+                            found.append(parse_command(command, newcode))
+                        except IndexError:
+                            pass
+                info['subfigures'] = found
+
+                for command in commands[:2]:
+                    try:
+                        info[command] = parse_command(command, self._code)
+                    except IndexError:
+                        info[command] = None
+            else:
                 for command in commands:
                     try:
-                        found.append(parse_command(command, newcode))
+                        info[command] = parse_command(command, self._code)
                     except IndexError:
-                        pass
-            info['subfigures'] = found
-
-            for command in commands[:2]:
+                        info[command] = None
+                command = 'plottwo'
                 try:
-                    info[command] = parse_command(command, self._code)
+                    info[command] = parse_command(command, self._code, 2)
                 except IndexError:
                     info[command] = None
-        else:
+        except:
+            # Catch any issue for now 
             for command in commands:
-                try:
-                    info[command] = parse_command(command, self._code)
-                except IndexError:
-                    info[command] = None
-            command = 'plottwo'
-            try:
-                info[command] = parse_command(command, self._code, 2)
-            except IndexError:
                 info[command] = None
 
         return info
