@@ -29,10 +29,13 @@
 % convert files on the fly to pdflatex compilation
 % requires `-enable-write18 -shell-escape`' compilation options
 \DeclareGraphicsExtensions{.jpg, .ps, .eps, .png, .pdf}
-\DeclareGraphicsRule{.ps}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .ps`-ps-converted-to.pdf}
-\DeclareGraphicsRule{.eps}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .eps`-eps-converted-to.pdf}
+% \DeclareGraphicsRule{.ps}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .ps`-ps-converted-to.pdf}
+% \DeclareGraphicsRule{.eps}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .eps`-eps-converted-to.pdf}
 \DeclareGraphicsRule{.pdf}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .pdf`-pdf-converted-to.pdf}
 \DeclareGraphicsRule{.png}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .png`-png-converted-to.pdf}
+% slightly better quality than above
+\DeclareGraphicsRule{.ps}{pdf}{.pdf}{`epstopdf #1 -o `dirname #1`/`basename #1 .ps`-ps-converted-to.pdf}
+\DeclareGraphicsRule{.eps}{pdf}{.pdf}{`epstopdf #1 -o `dirname #1`/`basename #1 .eps`-eps-converted-to.pdf}
 
 % highlight in yellow some text (e.g., authors)
 \newcommand\hl[1]{\colorbox{yellow}{#1}}
@@ -84,6 +87,7 @@
 % Authors
 \textbf{\large{<AUTHORS>}}
 
+\hl{<DATE>} -- <COMMENTS>
 \vspace{1em}
 
 % Abstract
@@ -195,11 +199,11 @@
 \fi
 			  
 % add bottom text -------------------------------------------------------------------
-\frame{
-  \begin{minipage}[b][0.05\Hi][b]{2\Wi}
-	\hl{<DATE>} -- <COMMENTS>
-   \end{minipage}
-}
+% \frame{
+%   \begin{minipage}[b][0.05\Hi][b]{2\Wi}
+% 	\hl{<DATE>} -- <COMMENTS>
+%    \end{minipage}
+% }
 
 \end{document}
 % -------------------------------------------------------------------------------------
