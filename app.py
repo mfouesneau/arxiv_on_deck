@@ -925,7 +925,7 @@ def main(template=None):
 
     mitarbeiter_list = options.get('mitarbeiter', './mitarbeiter.txt')
     mitarbeiter = get_mitarbeiter(mitarbeiter_list)
-    if identifier is None:
+    if identifier in (None, '', 'None'):
         papers = get_new_papers(skip_replacements=True)
         keep = filter_papers(papers, mitarbeiter)
     else:
