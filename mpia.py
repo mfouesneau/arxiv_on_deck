@@ -3,8 +3,7 @@ A quick and dirty parser for ArXiv
 ===================================
 
 """
-from app import (ExportPDFLatexTemplate, running_options,
-                 get_mitarbeiter, get_new_papers, filter_papers)
+from app import (ExportPDFLatexTemplate, main)
 
 
 class MPIATemplate(ExportPDFLatexTemplate):
@@ -62,15 +61,4 @@ class MPIATemplate(ExportPDFLatexTemplate):
 
 
 if __name__ == "__main__":
-
-    options = running_options()
-    papers = get_new_papers(skip_replacements=True)
-    mitarbeiter_list = options.get('mitarbeiter', './mitarbeiter.txt')
-    mitarbeiter = get_mitarbeiter(mitarbeiter_list)
-    keep = filter_papers(papers, mitarbeiter)
-    for paper in keep:
-        print(paper)
-        try:
-            paper.make_postage(template=MPIATemplate())
-        except Exception as error:
-            print(error)
+    main(template=MPIATemplate())

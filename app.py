@@ -843,6 +843,35 @@ def get_mitarbeiter(source='./mitarbeiter.txt'):
     return list(sorted(set(mitarbeiter)))
 
 
+def highlight_papers(papers, fname_list):
+    """ Extract papers when an author match is found
+    Parameters
+    ----------
+    papers: list(ArXivPaper)
+        paper list
+    fname_list: list(str)
+        authors to search
+
+    Returns
+    -------
+    keep: list(ArXivPaper)
+        papers with matching author
+    """
+    keep = []
+    for paper in papers:
+        if any(name in paper.authors for name in fname_list):
+            for name in fname_list:
+                for author in paper._authors:
+                    if name in author:
+                        # perfect match on family name
+                        # TODO: add initials test
+                        if (name == author.split()[-1]):
+                            print(name, author)
+                            paper.highlight_authors.append(author)
+        keep.append(paper)
+    return keep
+
+
 def filter_papers(papers, fname_list):
     """ Extract papers when an author match is found
     Parameters
@@ -876,7 +905,7 @@ def running_options():
 
     opts = (
             ('-m', '--mitarbeiter', dict(dest="hl_authors", help="List of authors to highlight (co-workers)", default='./mitarbeiter.txt', type='str')),
-            # ('-i', '--id', dict(dest="identifier", help="Make postage of a single paper given by its arxiv id", default='None', type='str')),
+            ('-i', '--id', dict(dest="identifier", help="Make postage of a single paper given by its arxiv id", default='None', type='str')),
         )
 
     from optparse import OptionParser
@@ -890,18 +919,26 @@ def running_options():
     return options.__dict__
 
 
-
-if __name__ == "__main__":
-
+def main(template=None):
     options = running_options()
-    papers = get_new_papers(skip_replacements=True)
+    identifier = options.get('identifier', None)
+
     mitarbeiter_list = options.get('mitarbeiter', './mitarbeiter.txt')
     mitarbeiter = get_mitarbeiter(mitarbeiter_list)
-    keep = filter_papers(papers, mitarbeiter)
+    if identifier is None:
+        papers = get_new_papers(skip_replacements=True)
+        keep = filter_papers(papers, mitarbeiter)
+    else:
+        papers = [ArXivPaper(identifier=identifier.split(':')[-1])]
+        keep = highlight_papers(papers, mitarbeiter)
+        
     for paper in keep:
         print(paper)
         try:
-            paper.make_postage()
+            paper.make_postage(template=template)
         except Exception as error:
             print(error)
 
+
+if __name__ == "__main__":
+    main()

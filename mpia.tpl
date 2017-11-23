@@ -145,7 +145,7 @@
 \frame{%
   \begin{minipage}[t][0.5\Hi][t]{2\Wi}%
     \vspace*{\fill}
-    {\begin{center}\figone\end{center}}\\  % put contents here
+    {\begin{center}\figone\end{center}}  % put contents here
     \capone
     \vspace*{\fill} \ 
   \end{minipage}}% 
@@ -155,14 +155,14 @@
     \frame{\ %
       \begin{minipage}[t][0.5\Hi][t]{\Wi-\gap}
         \vspace*{\fill}
-	{\begin{center}\figtwo\end{center}}\\
+	{\begin{center}\figtwo\end{center}}
         \captwo
 	\vspace*{\fill} \ 
       \end{minipage}}
     \frame{\ %
       \begin{minipage}[t][0.5\Hi][t]{\Wi-\gap}
 	   \vspace*{\fill}
-           {\begin{center}\figthree\end{center}}\\
+           {\begin{center}\figthree\end{center}}
 	   \capthree
 	   \vspace*{\fill}
 	 \end{minipage}}
@@ -174,7 +174,7 @@
 	\frame{%
 	\begin{minipage}[b][1\Hi][t]{1\Wi}%
          \vspace*{\fill}
-	 {\begin{center}\figone\end{center}}\\  % put contents here
+	 {\begin{center}\figone\end{center}}  % put contents here
          \capone
          \vspace*{\fill} \ 
 		\end{minipage}}%
@@ -184,15 +184,15 @@
 			\frame{\ %
         \begin{minipage}[t][0.5\Hi][t]{\Wi}
 	\vspace*{\fill}
-	  {\begin{center}\figtwo\end{center}}\\
+	  {\begin{center}\figtwo\end{center}}
           \captwo
          \vspace*{\fill} \ 
 			\end{minipage}}
 			\frame{\ %
 		\begin{minipage}[t][0.5\Hi][t]{\Wi}
 				  \vspace*{\fill}
-		{\begin{center}\figthree\end{center}}\\
-            \capthree\\
+		{\begin{center}\figthree\end{center}}
+            \capthree
             \vspace*{\fill} \ 
         \end{minipage}}
 	\end{minipage}}
