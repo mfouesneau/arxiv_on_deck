@@ -80,8 +80,10 @@ def main(template=None):
         try:
             paper.get_abstract()
             s = paper.retrieve_document_source('./tmp')
+            paper_request_test = (identifier is not None)
+            institute_test = (('Heidelberg' in s._code) or ('heidelberg' in s._code))
             # Filtering out bad matches
-            if (identifier is None) and (('Heidelberg' in s.code) or ('heidelberg' in s.code)):
+            if paper_request_test or institute_test:
                 s.compile(template=template)
                 _identifier = paper.identifier.split(':')[-1]
                 name = s.outputname.replace('.tex', '.pdf').split('/')[-1]
