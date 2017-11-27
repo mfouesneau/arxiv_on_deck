@@ -787,11 +787,15 @@ class ArXivPaper(object):
         print("Generating postage")
         self.get_abstract()
         s = self.retrieve_document_source('./tmp')
-        s.compile(template=template)
-        identifier = self.identifier.split(':')[-1]
-        name = s.outputname.replace('.tex', '.pdf').split('/')[-1]
-        shutil.move('./tmp/' + name, identifier + '.pdf')
-        print("PDF postage:", identifier + '.pdf' )
+        if ('Heidelberg' in s.code) or ('heidelberg' in s.code):
+            s.compile(template=template)
+            identifier = self.identifier.split(':')[-1]
+            name = s.outputname.replace('.tex', '.pdf').split('/')[-1]
+            shutil.move('./tmp/' + name, identifier + '.pdf')
+            print("PDF postage:", identifier + '.pdf' )
+        else:
+            print("Not from HD... Skip.")
+
 
 
 def get_new_papers(skip_replacements=False):
