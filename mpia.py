@@ -3,7 +3,7 @@ A quick and dirty parser for ArXiv
 ===================================
 
 """
-from app import (ExportPDFLatexTemplate, main)
+from app import (ExportPDFLatexTemplate)
 
 
 class MPIATemplate(ExportPDFLatexTemplate):
@@ -59,6 +59,39 @@ class MPIATemplate(ExportPDFLatexTemplate):
 
         return txt
 
+
+def main(template=None):
+    from app import (get_mitarbeiter, filter_papers, ArXivPaper,
+            highlight_papers, running_options, get_new_papers, shutil)
+    options = running_options()
+    identifier = options.get('identifier', None)
+
+    mitarbeiter_list = options.get('mitarbeiter', './mitarbeiter.txt')
+    mitarbeiter = get_mitarbeiter(mitarbeiter_list)
+    if identifier in (None, '', 'None'):
+        papers = get_new_papers(skip_replacements=True)
+        keep = filter_papers(papers, mitarbeiter)
+    else:
+        papers = [ArXivPaper(identifier=identifier.split(':')[-1])]
+        keep = highlight_papers(papers, mitarbeiter)
+        
+    for paper in keep:
+        print(paper)
+        try:
+            paper.get_abstract()
+            s = paper.retrieve_document_source('./tmp')
+            # Filtering out bad matches
+            if (identifier is None) and (('Heidelberg' in s.code) or ('heidelberg' in s.code)):
+                s.compile(template=template)
+                _identifier = paper.identifier.split(':')[-1]
+                name = s.outputname.replace('.tex', '.pdf').split('/')[-1]
+                shutil.move('./tmp/' + name, _identifier + '.pdf')
+                print("PDF postage:", _identifier + '.pdf' )
+            else:
+                print("Not from HD... Skip.")
+        except Exception as error:
+            print(error)
+        print("Generating postage")
 
 if __name__ == "__main__":
     main(template=MPIATemplate())
