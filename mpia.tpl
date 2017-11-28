@@ -31,8 +31,8 @@
 \DeclareGraphicsExtensions{.jpg, .ps, .eps, .png, .pdf}
 % \DeclareGraphicsRule{.ps}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .ps`-ps-converted-to.pdf}
 % \DeclareGraphicsRule{.eps}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .eps`-eps-converted-to.pdf}
-\DeclareGraphicsRule{.pdf}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .pdf`-pdf-converted-to.pdf}
-\DeclareGraphicsRule{.png}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .png`-png-converted-to.pdf}
+% \DeclareGraphicsRule{.pdf}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .pdf`-pdf-converted-to.pdf}
+% \DeclareGraphicsRule{.png}{pdf}{.pdf}{`convert -trim +repage #1 pdf:`dirname #1`/`basename #1 .png`-png-converted-to.pdf}
 % slightly better quality than above
 \DeclareGraphicsRule{.ps}{pdf}{.pdf}{`epstopdf #1 -o `dirname #1`/`basename #1 .ps`-ps-converted-to.pdf}
 \DeclareGraphicsRule{.eps}{pdf}{.pdf}{`epstopdf #1 -o `dirname #1`/`basename #1 .eps`-eps-converted-to.pdf}
@@ -42,7 +42,7 @@
 
 % makes abstract macro
 \renewcommand{\abstract}[1]{%
-  \textbf{\hl{arXiv:1711.03971} } #1
+  \textbf{\hl{<IDENTIFIER>} } #1
 }
 
 % Inhibit most of article macros
@@ -59,7 +59,7 @@
 \newlength\gap% separation between boxes
 \setlength\gap{4pt}
 \setlength\Wi{\dimexpr0.5\textwidth-0.75\gap\relax}
-\setlength\Hi{.7\textheight}
+\setlength\Hi{.67\textheight}
 \parindent0pt
 \fboxsep0pt
 \fboxrule0pt
