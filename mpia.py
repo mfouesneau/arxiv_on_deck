@@ -65,6 +65,7 @@ def main(template=None):
             highlight_papers, running_options, get_new_papers, shutil)
     options = running_options()
     identifier = options.get('identifier', None)
+    paper_request_test = (identifier not in (None, 'None', '', 'none'))
 
     mitarbeiter_list = options.get('mitarbeiter', './mitarbeiter.txt')
     mitarbeiter = get_mitarbeiter(mitarbeiter_list)
@@ -80,10 +81,12 @@ def main(template=None):
         try:
             paper.get_abstract()
             s = paper.retrieve_document_source('./tmp')
-            paper_request_test = (identifier is not None)
             institute_test = (('Heidelberg' in s._code) or ('heidelberg' in s._code))
+            print("\n**** From Heidelberg: ", institute_test, '\n')
             # Filtering out bad matches
-            if paper_request_test or institute_test:
+            if (not institute_test) and (not paper_request_test):
+                raise RuntimeError('Not an institute paper')
+            if (paper_request_test or institute_test):
                 s.compile(template=template)
                 _identifier = paper.identifier.split(':')[-1]
                 name = s.outputname.replace('.tex', '.pdf').split('/')[-1]
@@ -92,7 +95,7 @@ def main(template=None):
             else:
                 print("Not from HD... Skip.")
         except Exception as error:
-            print(error)
+            print(error, '\n')
         print("Generating postage")
 
 if __name__ == "__main__":
