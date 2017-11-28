@@ -90,6 +90,12 @@ def get_latex_macros(data):
     header = get_latex_header(data)
     macros = '\n'.join(re.compile(r'command{.*}').findall(header))
     macros = macros.replace('command', '\\providecommand')
+    #multiline def will be ignored
+    defs = [k for k in re.compile(r'\\def.*').findall(header) if (len(balanced_braces(k)) > 0)] 
+    macros += '\n'.join(defs)
+    print('*** Found macros and definitions in the header: ')
+
+    print(macros)
     return macros
 
 
@@ -525,11 +531,41 @@ class DocumentSource(Document):
         fname = self._auto_select_main_doc(fnames)
 
         with open(fname, 'r') as finput:
-            Document.__init__(self, finput.read())
+            data = self._expand_auxilary_files(finput.read(),
+                    directory=directory)
 
+        Document.__init__(self, data)
         self.fname = fname
         self.directory = directory
         self.outputname = self.fname[:-len('.tex')] + '_cleaned.tex' 
+
+    def _expand_auxilary_files(self, data, directory=''):
+        # inputs
+        inputs = list(re.compile(r'\\input.*').finditer(data))
+        if len(directory):
+            if directory[-1] != '/':
+                directory = directory + '/'
+        if len(inputs) > 0:
+            print('*** Found document inclusions ')
+            new_data = []
+            prev_start, prev_end = 0, 0
+            for match in inputs:
+                try:
+                    fname = match.group().replace(r'\input', '').strip()
+                    print('      input command: ', fname)
+                    with open(directory + fname + '.tex', 'r') as fauxilary:
+                        auxilary = fauxilary.read()
+                    start, end = match.span()
+                    new_data.append(data[prev_end:start])
+                    new_data.append('\n%input from {0:s}\n'.format(fname) + auxilary + '\n')
+                    prev_start, prev_end = start, end
+                except Exception as e:
+                    print(e)
+                    pass
+            new_data.append(data[prev_end:])
+            return '\n'.join(new_data)
+        else:
+            return data
 
     def _auto_select_main_doc(self, fnames):
         if (len(fnames) == 1):
@@ -675,7 +711,7 @@ class ArxivListHTMLParser(HTMLParser):
     def handle_data(self, data):
         if data.strip() in (None, "", ','):
             return
-        if 'replacement for' in data.lower():
+        if 'replacements for' in data.lower():
             self._skip = (True & self.skip_replacements)
         if self._paper_item:
             if 'arXiv:' in data:
