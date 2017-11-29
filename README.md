@@ -31,3 +31,9 @@ The figure selection remains simple in this version. It parses for the Arxiver
 tag:
 `%@arxiver{fig1.pdf,fig4.png,fig15.eps}`
 or selects the most references figures throughout the text.
+
+
+## Contributors
+
+Morgan Fouesneau (@mfouesneau)
+Iskren I. Georviev (@iskreng)
