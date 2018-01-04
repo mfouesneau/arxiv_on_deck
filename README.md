@@ -1,4 +1,5 @@
 # arxiv_on_deck
+[![Binder](https://mybinder.org/badge.svg)](https://mybinder.org/v2/gh/mfouesneau/arxiv_on_deck/master)
 
 This repository is a quick and dirty version of the Arxiver.
 
