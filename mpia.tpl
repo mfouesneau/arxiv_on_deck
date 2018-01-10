@@ -54,12 +54,12 @@
 
 % Layout definition --------------------------------------------------------
 % sets some dimensions
-\newlength\Wi% width for 1,2,3,4
-\newlength\Hi% height for 1
+\newlength\Widthtempl% width for 1,2,3,4
+\newlength\Highttempl% height for 1
 \newlength\gap% separation between boxes
 \setlength\gap{4pt}
-\setlength\Wi{\dimexpr0.5\textwidth-0.75\gap\relax}
-\setlength\Hi{.67\textheight}
+\setlength\Widthtempl{\dimexpr0.5\textwidth-0.75\gap\relax}
+\setlength\Highttempl{.67\textheight}
 \parindent0pt
 \fboxsep0pt
 \fboxrule0pt
@@ -92,7 +92,7 @@
 
 % Abstract
 \frame{
-	\begin{minipage}[t][0.25\Hi][t]{2\Wi}%
+	\begin{minipage}[t][0.25\Highttempl][t]{2\Widthtempl}%
 		\abstract{ 
 			<ABSTRACT> 
 		}
@@ -143,7 +143,7 @@
 \def\maxheight{0.25\paperheight}
 \def\maxwidth{\textwidth}
 \frame{%
-  \begin{minipage}[t][0.5\Hi][t]{2\Wi}%
+  \begin{minipage}[t][0.5\Highttempl][t]{2\Widthtempl}%
     \vspace*{\fill}
     {\begin{center}\figone\end{center}}  % put contents here
     \capone
@@ -151,16 +151,16 @@
   \end{minipage}}% 
 \par
 \fbox{%
-  \begin{minipage}[t][0.49\Hi][t]{2\Wi+\gap}
+  \begin{minipage}[t][0.49\Highttempl][t]{2\Widthtempl+\gap}
     \frame{\ %
-      \begin{minipage}[t][0.5\Hi][t]{\Wi-\gap}
+      \begin{minipage}[t][0.5\Highttempl][t]{\Widthtempl-\gap}
         \vspace*{\fill}
 	{\begin{center}\figtwo\end{center}}
         \captwo
 	\vspace*{\fill} \ 
       \end{minipage}}
     \frame{\ %
-      \begin{minipage}[t][0.5\Hi][t]{\Wi-\gap}
+      \begin{minipage}[t][0.5\Highttempl][t]{\Widthtempl-\gap}
 	   \vspace*{\fill}
            {\begin{center}\figthree\end{center}}
 	   \capthree
@@ -172,7 +172,7 @@
 	\def\maxheight{0.4\paperheight}
 	\def\maxwidth{\textwidth}
 	\frame{%
-	\begin{minipage}[b][1\Hi][t]{1\Wi}%
+	\begin{minipage}[b][1\Highttempl][t]{1\Widthtempl}%
          \vspace*{\fill}
 	 {\begin{center}\figone\end{center}}  % put contents here
          \capone
@@ -180,16 +180,16 @@
 		\end{minipage}}%
 	\fbox{%
 		\def\maxheight{0.3\paperheight}
-		\begin{minipage}[b][1\Hi][t]{\Wi+1\gap}
+		\begin{minipage}[b][1\Highttempl][t]{\Widthtempl+1\gap}
 			\frame{\ %
-        \begin{minipage}[t][0.5\Hi][t]{\Wi}
+        \begin{minipage}[t][0.5\Highttempl][t]{\Widthtempl}
 	\vspace*{\fill}
 	  {\begin{center}\figtwo\end{center}}
           \captwo
          \vspace*{\fill} \ 
 			\end{minipage}}
 			\frame{\ %
-		\begin{minipage}[t][0.5\Hi][t]{\Wi}
+		\begin{minipage}[t][0.5\Highttempl][t]{\Widthtempl}
 				  \vspace*{\fill}
 		{\begin{center}\figthree\end{center}}
             \capthree
@@ -200,7 +200,7 @@
 			  
 % add bottom text -------------------------------------------------------------------
 % \frame{
-%   \begin{minipage}[b][0.05\Hi][b]{2\Wi}
+%   \begin{minipage}[b][0.05\Highttempl][b]{2\Widthtempl}
 % 	\hl{<DATE>} -- <COMMENTS>
 %    \end{minipage}
 % }
