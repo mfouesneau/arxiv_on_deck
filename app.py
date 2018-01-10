@@ -32,7 +32,7 @@ else:
 
 
 def balanced_braces(args):
-    """ Find tokens between {} 
+    """ Find tokens between {}
 
     Parameters
     ----------
@@ -52,37 +52,37 @@ def balanced_braces(args):
             continue
         chars = []
         rest = []
-        n = 0
-        for c in arg:
-            if c == '{':
-                if n > 0:
-                    chars.append(c)
-                n += 1
-            elif c == '}':
-                n -= 1
-                if n > 0:
-                    chars.append(c)
-                elif n == 0:
+        num = 0
+        for char in arg:
+            if char == '{':
+                if num > 0:
+                    chars.append(char)
+                num += 1
+            elif char == '}':
+                num -= 1
+                if num > 0:
+                    chars.append(char)
+                elif num == 0:
                     parts.append(''.join(chars).lstrip().rstrip())
                     chars = []
-            elif n > 0:
-                chars.append(c)
+            elif num > 0:
+                chars.append(char)
             else:
-                rest.append(c)
+                rest.append(char)
     return parts
 
 
 def get_latex_body(data):
     """ Extract document body text """
-    a = re.compile(r'begin{document}').search(data).span()[1]
-    b = re.compile(r'end{document}').search(data).span()[0]
-    return clear_comments(data[a:b])
+    start = re.compile(r'begin{document}').search(data).span()[1]
+    end = re.compile(r'end{document}').search(data).span()[0]
+    return clear_comments(data[start:end])
 
 
 def get_latex_header(data):
     """ Extract document header """
-    a = re.compile(r'begin{document}').search(data).span()[1]
-    return data[:a]
+    end = re.compile(r'begin{document}').search(data).span()[1]
+    return data[:end]
 
 
 def get_latex_macros(data):
@@ -91,19 +91,22 @@ def get_latex_macros(data):
     macros = '\n'.join(re.compile(r'command{.*}').findall(header))
     macros = macros.replace('command', '\\providecommand')
     #multiline def will be ignored
-    defs = [k for k in re.compile(r'\\def.*').findall(header) if (len(balanced_braces(k)) > 0)] 
-    defs = defs + [k for k in re.compile(r'\\gdef.*').findall(header) if (len(balanced_braces(k)) > 0)] 
+    defs = [k for k in re.compile(r'\\def.*').findall(header)
+            if len(balanced_braces(k)) > 0]
+    # some use \gdef  (global def instead of scoped)
+    defs = defs + [k for k in re.compile(r'\\gdef.*').findall(header)
+                   if len(balanced_braces(k)) > 0]
     macros += '\n'.join(defs)
     print('*** Found macros and definitions in the header: ')
-
     print(macros)
     return macros
 
 
 def clear_comments(data):
+    """ clean text from any comment """
     lines = []
     for line in data.splitlines():
-        try: 
+        try:
             start = list(re.compile(r'(?<!\\)%').finditer(line))[0].span()[0]
             lines.append(line[:start])
         except IndexError:
@@ -142,7 +145,7 @@ def parse_command(command, code, tokens=1):
     safe = command.replace('\\', '')
     options = re.findall(safe + '\s*\[.*\]', code)
     where = list(re.compile(r'\\' + safe).finditer(code))[0].span()[1]
-    if len(options) > 0:
+    if options:  # empty sequences are False
         opt = options[0]
         code = code.replace(opt.replace(command, ''), '')
     next_token = balanced_braces(code[where:])[:tokens]
@@ -208,7 +211,7 @@ def get_latex_environment(envname, data, onlycontent=True):
 
 
 class Figure(object):
-    """ 
+    """
     class that attempts to catch figures from tex source input in many formats
     """
     def __init__(self, code, number=0):
@@ -226,30 +229,39 @@ class Figure(object):
         """ how many times the figure is cited in the text """
         return self._n_references
 
+    def _parse_subfigure(self):
+        """ Parse the code for specific commands """
+        commands = 'caption', 'label', 'includegraphics', 'plotone'
+        info = {}
+        # careful with subfigure...
+        found = []
+        for match in re.compile(r'subfigure.*').finditer(self._code):
+            start, end = match.span()
+            newcode = balanced_braces(self._code[start:end])[0]
+            for command in commands:
+                try:
+                    found.append(parse_command(command, newcode))
+                except IndexError:
+                    pass
+        info['subfigures'] = found
+
+        for command in commands[:2]:
+            try:
+                info[command] = parse_command(command, self._code)
+            except IndexError:
+                info[command] = None
+
+        return info
+
     def _parse(self):
         """ Parse the code for specific commands """
         commands = 'caption', 'label', 'includegraphics', 'plotone'
-        info= {}
+        info = {}
         # makes sure multiple includegraphics on the same line do work
         try:
             # careful with subfigure...
             if 'subfigure' in self._code:
-                found = []
-                for match in re.compile(r'subfigure.*').finditer(self._code):
-                    start, end = match.span()
-                    newcode = balanced_braces(self._code[start:end])[0]
-                    for command in commands:
-                        try:
-                            found.append(parse_command(command, newcode))
-                        except IndexError:
-                            pass
-                info['subfigures'] = found
-
-                for command in commands[:2]:
-                    try:
-                        info[command] = parse_command(command, self._code)
-                    except IndexError:
-                        info[command] = None
+                self._parse_subfigure()
             else:
                 for command in commands:
                     count = self._code.count(command)
@@ -267,7 +279,7 @@ class Figure(object):
                     info[command] = None
         except Exception as error:
             print(error)
-            # Catch any issue for now 
+            # Catch any issue for now
             for command in commands:
                 info[command] = None
 
@@ -284,7 +296,7 @@ class Figure(object):
         if attr is not None:
             try:
                 files.extend(attr)
-            except Exception:
+            except TypeError:
                 files.append(attr)
         for k in 'plottwo', 'subfigures':
             attr = self.info.get(k)
@@ -294,10 +306,12 @@ class Figure(object):
 
     @property
     def label(self):
+        """ figure label """
         return self.info['label']
 
     @property
     def caption(self):
+        """ figure caption """
         return self.info['caption']
 
     def __repr__(self):
@@ -305,7 +319,7 @@ class Figure(object):
         {2:s}
         File(s): {3:s}"""
         return txt.format(self._number, self.label or "",
-                self.caption, ','.join(self.files))
+                          self.caption, ','.join(self.files))
 
 
 class Document(object):
@@ -329,7 +343,6 @@ class Document(object):
 
         self._update_figure_references()
 
-
     def _update_figure_references(self):
         """ parse to find cited figures in the text """
         for fig in self.figures:
@@ -340,24 +353,29 @@ class Document(object):
     @property
     def arxivertag(self):
         """ check for arxiver tag selecting figures """
+        tags = None
         if r"%@arxiver" in self._code:
             start, end = list(re.compile(r'@arxiver{.*}').finditer(self._body))[0].span()
-            return balanced_braces(self._code[start:end])[0]
+            tags = balanced_braces(self._code[start:end])[0]
+        return tags
 
     @property
     def title(self):
+        """ Document title """
         if self._title is None:
-            self._title = parse_command('title', self._code) 
+            self._title = parse_command('title', self._code)
         return self._title
 
     @property
     def authors(self):
+        """ Document authors """
         if self._authors is None:
-            self._authors = parse_command('author', self._code) 
+            self._authors = parse_command('author', self._code)
         return self._authors
 
     @property
     def short_authors(self):
+        """ Short authors """
         if self._short_authors is not None:
             return self._short_authors
         if len(self.authors) < 5:
@@ -367,7 +385,7 @@ class Document(object):
                 authors = r'\hl{' + self._authors[0] + r'}, et al.'
             else:
                 authors = self._authors[0] + ", et al."
-        if len(self.highlight_authors) > 0:
+        if self.highlight_authors:
             incl_authors = []
             for name in set(self.highlight_authors):
                 if name != self._authors[0]:
@@ -378,6 +396,7 @@ class Document(object):
 
     @property
     def abstract(self):
+        """ Document abstract """
         if self._abstract is None:
             try:
                 try:
@@ -408,14 +427,14 @@ class Document(object):
             level = levels[tag.group()] + int(starts >= appendix_start)
             attr = (level, name, [])
 
-            if len(structure) == 0:
+            if not structure:
                 structure.append(attr)
             else:
-                if ((starts >= appendix_start) & (structure[-1][1] != 'Appendix')):
+                if (starts >= appendix_start) & (structure[-1][1] != 'Appendix'):
                     structure.append((0, 'Appendix', []))
                 if level > structure[-1][0]:
                     last = structure[-1][-1]
-                    if len(last) > 0:
+                    if last:
                         if level > last[-1][0]:
                             last[-1][-1].append(attr)
                         else:
@@ -428,6 +447,7 @@ class Document(object):
         return self._structure
 
     def print_structure(self):
+        """ Pretty print the document structure """
         for node in self._parse_structure():
             name = node[1]
             children = node[-1]
@@ -446,6 +466,7 @@ class Document(object):
 
 
 class ExportPDFLatexTemplate(object):
+    """ default template """
 
     template = r"""%
 \documentclass[a4paper]{article}
@@ -515,15 +536,18 @@ class ExportPDFLatexTemplate(object):
     compiler_options = r"-enable-write18 -shell-escape -interaction=nonstopmode"
 
     def short_authors(self, document):
+        """ Short author """
         return document.short_authors
 
     def select_figures(self, document, N=3):
+        """ decides which figures to show """
         selection = sorted(document.figures, 
                 key=lambda x: x.number_of_references, 
                 reverse=True)
         return selection[:N]
 
     def figure_to_latex(self, figure, size=r'0.32\textwidth'):
+        """ makes the figures in tex formatting """
         txt = r"""\begin{minipage}{0.32\textwidth}""" + '\n'
         for fname in figure.files:
             txt += r"    \includegraphics[width=\textwidth, height=0.4\textheight,keepaspectratio]{"
@@ -542,6 +566,7 @@ class ExportPDFLatexTemplate(object):
         '''
 
     def apply_to_document(self, document):
+        """ generate tex code from document """
 
         txt = self.template.replace('<MACROS>', "") # document._macros) 
         if document._identifier is not None:
@@ -562,6 +587,7 @@ class ExportPDFLatexTemplate(object):
 
 
 class DocumentSource(Document):
+    """ Source code class """
 
     def __init__(self, directory):
         fnames = glob(directory + '/*.tex')
