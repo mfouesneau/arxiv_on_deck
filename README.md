@@ -8,6 +8,20 @@ A sort of Arxiver for institutes or groups
 
 And example is given in the example directory
 
+## Quick Start
+
+```
+Usage: main.py [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -m HL_AUTHORS, --mitarbeiter=HL_AUTHORS
+                        List of authors to highlight (co-workers)
+  -i IDENTIFIER, --id=IDENTIFIER
+                        Make postage of a single paper given by its arxiv id
+  -a HL_AUTHORS, --authors=HL_AUTHORS
+                        Highlight specific authors
+```
 
 ## What is different from the Arxiver?
 
