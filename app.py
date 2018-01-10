@@ -294,10 +294,10 @@ class Figure(object):
             files.append(attr)
         attr = self.info.get('includegraphics')
         if attr is not None:
-            try:
-                files.extend(attr)
-            except TypeError:
+            if isinstance(attr, basestring):
                 files.append(attr)
+            else:
+                files.extend(attr)
         for k in 'plottwo', 'subfigures':
             attr = self.info.get(k)
             if attr is not None:
@@ -798,14 +798,16 @@ class ArXivPaper(object):
     source = "https://arxiv.org/e-print/{identifier}"
     abstract = "https://arxiv.org/abs/{identifier}"
 
-    def __init__(self, identifier=""):
+    def __init__(self, identifier="", highlight_authors=[]):
         """ Initialize the data """
         self.identifier = identifier
         self.title = ""
         self._authors = []
-        self.highlight_authors = []
+        self.highlight_authors = highlight_authors
         self.comment = ""
         self.date = None
+        if len(self.identifier) > 0:
+            self.get_abstract()
 
     @classmethod
     def from_identifier(cls, identifier):
