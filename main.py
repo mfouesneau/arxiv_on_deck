@@ -2,13 +2,14 @@
 A quick and dirty parser for ArXiv
 ===================================
 
+Default running application
 """
 from app import (ExportPDFLatexTemplate)
 
 
-class MPIATemplate(ExportPDFLatexTemplate):
+class DefaultTemplate(ExportPDFLatexTemplate):
 
-    template = open('./mpia.tpl', 'r').read()
+    template = open('./default.tpl', 'r').read()
 
     compiler = r"TEXINPUTS='../deprecated_tex:' pdflatex"
     compiler_options = r"-enable-write18 -shell-escape -interaction=nonstopmode"
@@ -62,8 +63,7 @@ class MPIATemplate(ExportPDFLatexTemplate):
 
 def main(template=None):
     from app import (get_mitarbeiter, filter_papers, ArXivPaper,
-            highlight_papers, running_options, get_new_papers, shutil,
-            check_required_words)
+            highlight_papers, running_options, get_new_papers, shutil)
     options = running_options()
     identifier = options.get('identifier', None)
     paper_request_test = (identifier not in (None, 'None', '', 'none'))
@@ -81,30 +81,20 @@ def main(template=None):
     else:
         papers = [ArXivPaper(identifier=identifier.split(':')[-1])]
         keep = highlight_papers(papers, mitarbeiter)
-
-    institute_words = ['Heidelberg', 'Max Planck', 'Max-Planck', '69117']
         
     for paper in keep:
         print(paper)
         try:
             paper.get_abstract()
             s = paper.retrieve_document_source('./tmp')
-            institute_test = check_required_words(s, institute_words)
-            print("\n**** From Heidelberg: ", institute_test, '\n')
-            # Filtering out bad matches
-            if (not institute_test) and (not paper_request_test):
-                raise RuntimeError('Not an institute paper')
-            if (paper_request_test or institute_test):
-                s.compile(template=template)
-                _identifier = paper.identifier.split(':')[-1]
-                name = s.outputname.replace('.tex', '.pdf').split('/')[-1]
-                shutil.move('./tmp/' + name, _identifier + '.pdf')
-                print("PDF postage:", _identifier + '.pdf' )
-            else:
-                print("Not from HD... Skip.")
+            s.compile(template=template)
+            _identifier = paper.identifier.split(':')[-1]
+            name = s.outputname.replace('.tex', '.pdf').split('/')[-1]
+            shutil.move('./tmp/' + name, _identifier + '.pdf')
+            print("PDF postage:", _identifier + '.pdf' )
         except Exception as error:
             print(error, '\n')
         print("Generating postage")
 
 if __name__ == "__main__":
-    main(template=MPIATemplate())
+    main(template=DefaultTemplate())

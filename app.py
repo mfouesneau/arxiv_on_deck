@@ -1005,11 +1005,26 @@ def filter_papers(papers, fname_list):
     return keep
 
 
+def check_required_words(source, word_list=[]):
+    """ Check the paper for words required for processing 
+
+    Test is case insensitive but all words must appear
+    """
+    check = True
+    for word in word_list:
+        if (word in source._code) or (word.lower() in source._code):
+            check = check and True
+        else:
+            return False
+    return check
+
+
 def running_options():
 
     opts = (
             ('-m', '--mitarbeiter', dict(dest="hl_authors", help="List of authors to highlight (co-workers)", default='./mitarbeiter.txt', type='str')),
             ('-i', '--id', dict(dest="identifier", help="Make postage of a single paper given by its arxiv id", default='None', type='str')),
+            ('-a', '--authors', dict(dest="hl_authors", help="Highlight specific authors", default='None', type='str')),
         )
 
     from optparse import OptionParser
@@ -1042,7 +1057,3 @@ def main(template=None):
             paper.make_postage(template=template, mitarbeiter=mitarbeiter)
         except Exception as error:
             print(error)
-
-
-if __name__ == "__main__":
-    main()
