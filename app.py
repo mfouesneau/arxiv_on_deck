@@ -92,6 +92,7 @@ def get_latex_macros(data):
     macros = macros.replace('command', '\\providecommand')
     #multiline def will be ignored
     defs = [k for k in re.compile(r'\\def.*').findall(header) if (len(balanced_braces(k)) > 0)] 
+    defs = defs + [k for k in re.compile(r'\\gdef.*').findall(header) if (len(balanced_braces(k)) > 0)] 
     macros += '\n'.join(defs)
     print('*** Found macros and definitions in the header: ')
 
@@ -203,7 +204,8 @@ class Figure(object):
     def _parse(self):
         """ Parse the code for specific commands """
         commands = 'caption', 'label', 'includegraphics', 'plotone'
-        info = {}
+        info= {}
+        # makes sure multiple includegraphics on the same line do work
         try:
             # careful with subfigure...
             if 'subfigure' in self._code:
@@ -335,7 +337,7 @@ class Document(object):
             for name in set(self.highlight_authors):
                 if name != self._authors[0]:
                     incl_authors.append(r'\hl{' + name + r'}')
-            authors += '; incl. ' + ','.join(incl_authors)
+            authors += '; incl. ' + ', '.join(incl_authors)
         self._short_authors = authors
         return authors
 

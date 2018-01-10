@@ -81,7 +81,7 @@ def main(template=None):
         try:
             paper.get_abstract()
             s = paper.retrieve_document_source('./tmp')
-            institute_test = (('Heidelberg' in s._code) or ('heidelberg' in s._code))
+            institute_test = (('Heidelberg' in s._code) or ('heidelberg' in s._code)) and (('Max Planck' in s._code) or ('Max-Planck' in s._code)) and ('69117' in s._code)
             print("\n**** From Heidelberg: ", institute_test, '\n')
             # Filtering out bad matches
             if (not institute_test) and (not paper_request_test):
