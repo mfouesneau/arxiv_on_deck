@@ -141,14 +141,39 @@ def parse_command(command, code, tokens=1):
     """
     safe = command.replace('\\', '')
     options = re.findall(safe + '\s*\[.*\]', code)
+    where = list(re.compile(r'\\' + safe).finditer(code))[0].span()[1]
     if len(options) > 0:
         opt = options[0]
         code = code.replace(opt.replace(command, ''), '')
-    where = list(re.compile(r'\\' + safe).finditer(code))[0].span()[1]
     next_token = balanced_braces(code[where:])[:tokens]
     if tokens == 1:
         return next_token[0]
     return next_token
+
+
+def parse_command_multi(command, code, tokens=1):
+    """
+    Parse code to find a command arguments and handles repeated command
+
+    Parameters
+    ----------
+    command: str
+        command to find
+
+    code: str
+        code in which searching
+
+    tokens: int
+        number of arguments to find
+
+    Returns
+    -------
+    next_token: sequence or str
+        found arguments
+    """
+    safe = command.replace('\\', '')
+    pieces = [code[r.start()-1:] for r in re.finditer(safe, code)]
+    return [parse_command(safe, pk, tokens=tokens) for pk in pieces]
 
 
 def get_latex_environment(envname, data, onlycontent=True):
@@ -227,8 +252,12 @@ class Figure(object):
                         info[command] = None
             else:
                 for command in commands:
+                    count = self._code.count(command)
                     try:
-                        info[command] = parse_command(command, self._code)
+                        if count > 1:
+                            info[command] = parse_command_multi(command, self._code)
+                        else:
+                            info[command] = parse_command(command, self._code)
                     except IndexError:
                         info[command] = None
                 command = 'plottwo'
@@ -236,7 +265,8 @@ class Figure(object):
                     info[command] = parse_command(command, self._code, 2)
                 except IndexError:
                     info[command] = None
-        except:
+        except Exception as error:
+            print(error)
             # Catch any issue for now 
             for command in commands:
                 info[command] = None
@@ -247,9 +277,14 @@ class Figure(object):
     def files(self):
         """ Associated data files """
         files = []
-        for k in 'includegraphics', 'plotone':
-            attr = self.info.get(k)
-            if attr is not None:
+        attr = self.info.get('plotone')
+        if attr is not None:
+            files.append(attr)
+        attr = self.info.get('includegraphics')
+        if attr is not None:
+            try:
+                files.extend(attr)
+            except Exception:
                 files.append(attr)
         for k in 'plottwo', 'subfigures':
             attr = self.info.get(k)
