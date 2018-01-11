@@ -754,6 +754,7 @@ class ArxivListHTMLParser(HTMLParser):
         self._author_tag = False
         self.skip_replacements = skip_replacements
         self._skip = False
+        self._date = ''
 
     def handle_starttag(self, tag, attrs):
         # paper starts with a dt tag
@@ -761,7 +762,7 @@ class ArxivListHTMLParser(HTMLParser):
             if self.current_paper:
                 self.papers.append(self.current_paper)
             self._paper_item = True
-            self.current_paper = ArXivPaper()
+            self.current_paper = ArXivPaper(appearedon=self._date)
 
     def handle_endtag(self, tag):
         # paper ends with a /dd tag
@@ -777,6 +778,8 @@ class ArxivListHTMLParser(HTMLParser):
             return
         if 'replacements for' in data.lower():
             self._skip = (True & self.skip_replacements)
+        if 'new submissions for' in data.lower():
+            self._date = data.lower().replace('new submissions for', '')
         if self._paper_item:
             if 'arXiv:' in data:
                 self.current_paper.identifier = data
@@ -798,7 +801,7 @@ class ArXivPaper(object):
     source = "https://arxiv.org/e-print/{identifier}"
     abstract = "https://arxiv.org/abs/{identifier}"
 
-    def __init__(self, identifier="", highlight_authors=[]):
+    def __init__(self, identifier="", highlight_authors=[], appearedon=None):
         """ Initialize the data """
         self.identifier = identifier
         self.title = ""
@@ -806,6 +809,7 @@ class ArXivPaper(object):
         self.highlight_authors = highlight_authors
         self.comment = ""
         self.date = None
+        self.appearedon = appearedon
         if len(self.identifier) > 0:
             self.get_abstract()
 
@@ -836,7 +840,7 @@ class ArXivPaper(object):
             for name in self.highlight_authors:
                 if name != self._authors[0]:
                     incl_authors.append(r'\hl{' + name + r'}')
-            authors += '; incl. ' + ','.join(incl_authors)
+            authors += '; incl. ' + ', '.join(incl_authors)
         return authors
 
     def __repr__(self):
@@ -869,7 +873,10 @@ class ArXivPaper(object):
             document._authors = self.authors
             document._identifier = self.identifier
             document.comment = self.comment
-            document.date = self.date
+            if self.appearedon is None:
+                document.date = self.date
+            else:
+                document.date = self.appearedon
             return document
 
     def get_abstract(self):
