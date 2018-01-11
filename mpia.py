@@ -75,6 +75,7 @@ def main(template=None):
         mitarbeiter = get_mitarbeiter(mitarbeiter_list)
     else:
         mitarbeiter = [author.strip() for author in hl_authors.split(',')]
+
     if identifier in (None, '', 'None'):
         papers = get_new_papers(skip_replacements=True)
         keep = filter_papers(papers, mitarbeiter)
@@ -82,7 +83,7 @@ def main(template=None):
         papers = [ArXivPaper(identifier=identifier.split(':')[-1])]
         keep = highlight_papers(papers, mitarbeiter)
 
-    institute_words = ['Heidelberg', 'Max Planck', 'Max-Planck', '69117']
+    institute_words = ['Heidelberg', 'Max', 'Planck', '69117']
         
     for paper in keep:
         print(paper)
