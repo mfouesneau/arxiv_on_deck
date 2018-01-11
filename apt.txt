@@ -1,5 +1,6 @@
 texlive-latex-base
 texlive-latex-recommended
+texlive-generic-recommended
 texlive-science
 texlive-publishers
 texlive-latex-extra
