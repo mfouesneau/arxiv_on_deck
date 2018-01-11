@@ -4,6 +4,7 @@ texlive-science
 texlive-publishers
 texlive-latex-extra
 texlive-fonts-recommended
+texlive-fonts-extra
 texlive-font-utils
 dvipng
 ghostscript
