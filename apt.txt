@@ -1,6 +1,7 @@
 texlive-latex-base
 texlive-latex-recommended
 texlive-science
+texlive-publishers
 texlive-latex-extra
 texlive-fonts-recommended
 texlive-font-utils
