@@ -75,13 +75,14 @@ def main(template=None):
         mitarbeiter = get_mitarbeiter(mitarbeiter_list)
     else:
         mitarbeiter = [author.strip() for author in hl_authors.split(',')]
+
     if identifier in (None, '', 'None'):
         papers = get_new_papers(skip_replacements=True)
         keep = filter_papers(papers, mitarbeiter)
     else:
         papers = [ArXivPaper(identifier=identifier.split(':')[-1])]
         keep = highlight_papers(papers, mitarbeiter)
-        
+    
     for paper in keep:
         print(paper)
         try:
@@ -94,7 +95,6 @@ def main(template=None):
             print("PDF postage:", _identifier + '.pdf' )
         except Exception as error:
             print(error, '\n')
-        print("Generating postage")
 
 if __name__ == "__main__":
     main(template=DefaultTemplate())

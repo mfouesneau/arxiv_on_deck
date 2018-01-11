@@ -801,12 +801,15 @@ class ArXivPaper(object):
     source = "https://arxiv.org/e-print/{identifier}"
     abstract = "https://arxiv.org/abs/{identifier}"
 
-    def __init__(self, identifier="", highlight_authors=[], appearedon=None):
+    def __init__(self, identifier="", highlight_authors=None, appearedon=None):
         """ Initialize the data """
         self.identifier = identifier
         self.title = ""
         self._authors = []
-        self.highlight_authors = highlight_authors
+        if highlight_authors is None:
+            self.highlight_authors = [] 
+        else:
+            self.highlight_authors = highlight_authors
         self.comment = ""
         self.date = None
         self.appearedon = appearedon
@@ -891,7 +894,7 @@ class ArXivPaper(object):
         self.date = parser.date
         return self
 
-    def make_postage(self, template=None, mitarbeiter=None):
+    def make_postage(self, template=None):
         print("Generating postage")
         self.get_abstract()
         s = self.retrieve_document_source('./tmp')
@@ -953,6 +956,7 @@ def get_mitarbeiter(source='./mitarbeiter.txt'):
 
 def highlight_papers(papers, fname_list):
     """ Extract papers when an author match is found
+
     Parameters
     ----------
     papers: list(ArXivPaper)
@@ -968,15 +972,14 @@ def highlight_papers(papers, fname_list):
     keep = []
     for paper in papers:
         print(paper)
+        paper.highlight_authors = []
         for name in fname_list:
             for author in paper._authors:
-                # print(author)
                 if name in author:
-                    print(name, author)
                     # perfect match on family name
                     # TODO: add initials test
                     if (name == author.split()[-1]):
-                        # print(name, author)
+                        print('*** Matching author: ', name, author)
                         paper.highlight_authors.append(author)
         keep.append(paper)
     return keep
@@ -998,16 +1001,17 @@ def filter_papers(papers, fname_list):
     """
     keep = []
     for paper in papers:
-        if any(name in paper.authors for name in fname_list):
+        paper.highlight_authors = []
+        matches = [name for name in fname_list if ' ' + name in paper.authors]
+        if matches:
             for name in fname_list:
                 for author in paper._authors:
                     if name in author:
-                        # perfect match on family name
                         # TODO: add initials test
                         if (name == author.split()[-1]):
-                            # print(name, author)
+                            print("*** Matched author: ", name, author)
                             paper.highlight_authors.append(author)
-            keep.append(paper)
+                            keep.append(paper)
     return keep
 
 
@@ -1060,6 +1064,6 @@ def main(template=None):
     for paper in keep:
         print(paper)
         try:
-            paper.make_postage(template=template, mitarbeiter=mitarbeiter)
+            paper.make_postage(template=template)
         except Exception as error:
             print(error)
