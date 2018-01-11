@@ -593,7 +593,7 @@ class DocumentSource(Document):
         fnames = glob(directory + '/*.tex')
         fname = self._auto_select_main_doc(fnames)
 
-        with open(fname, 'r') as finput:
+        with open(fname, 'r', errors="surrogateescape") as finput:
             data = self._expand_auxilary_files(finput.read(),
                     directory=directory)
 
@@ -854,7 +854,9 @@ class ArXivPaper(object):
             print("extracting tarball...")
             tar.extractall(directory)
             document = DocumentSource(directory)
+            print("extracting tarball...")
             self.get_abstract()
+            print("extracting tarball...")
             try:
                 document.authors
             except Exception as error:
@@ -875,7 +877,6 @@ class ArXivPaper(object):
     def get_abstract(self):
         where = ArXivPaper.abstract.format(identifier=self.identifier.split(':')[-1])
         html = urlopen(where).read().decode('utf-8')
-
         parser = ArxivAbstractHTMLParser()
         parser.feed(html)
         self.title = parser.title
@@ -887,7 +888,9 @@ class ArXivPaper(object):
 
     def make_postage(self, template=None, mitarbeiter=None):
         print("Generating postage")
+        print('there')
         self.get_abstract()
+        print('there')
         s = self.retrieve_document_source('./tmp')
         s.compile(template=template)
         identifier = self.identifier.split(':')[-1]
@@ -964,13 +967,13 @@ def highlight_papers(papers, fname_list):
         print(paper)
         for name in fname_list:
             for author in paper._authors:
-                print(author)
+                # print(author)
                 if name in author:
                     print(name, author)
                     # perfect match on family name
                     # TODO: add initials test
                     if (name == author.split()[-1]):
-                        print(name, author)
+                        # print(name, author)
                         paper.highlight_authors.append(author)
         keep.append(paper)
     return keep
