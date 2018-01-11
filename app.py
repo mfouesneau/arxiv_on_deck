@@ -854,9 +854,7 @@ class ArXivPaper(object):
             print("extracting tarball...")
             tar.extractall(directory)
             document = DocumentSource(directory)
-            print("extracting tarball...")
             self.get_abstract()
-            print("extracting tarball...")
             try:
                 document.authors
             except Exception as error:
@@ -888,9 +886,7 @@ class ArXivPaper(object):
 
     def make_postage(self, template=None, mitarbeiter=None):
         print("Generating postage")
-        print('there')
         self.get_abstract()
-        print('there')
         s = self.retrieve_document_source('./tmp')
         s.compile(template=template)
         identifier = self.identifier.split(':')[-1]
@@ -1002,7 +998,7 @@ def filter_papers(papers, fname_list):
                         # perfect match on family name
                         # TODO: add initials test
                         if (name == author.split()[-1]):
-                            print(name, author)
+                            # print(name, author)
                             paper.highlight_authors.append(author)
             keep.append(paper)
     return keep
