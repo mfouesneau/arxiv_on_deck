@@ -6,3 +6,4 @@ texlive-fonts-recommended
 texlive-font-utils
 dvipng
 ghostscript
+vim
