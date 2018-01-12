@@ -97,6 +97,8 @@ def get_latex_macros(data):
     # some use \gdef  (global def instead of scoped)
     defs = defs + [k for k in re.compile(r'\\gdef.*').findall(header)
                    if len(balanced_braces(k)) > 0]
+    defs = defs + [k for k in re.compile(r'\\graphicspath.*').findall(header)
+                   if len(balanced_braces(k)) > 0]
     macros += '\n'.join(defs)
     print('*** Found macros and definitions in the header: ')
     print(macros)
