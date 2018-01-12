@@ -353,6 +353,7 @@ class Document(object):
                     fig.set_number_of_references(number)
                 except TypeError:
                     # sometimes labels are duplicated into a list
+                    number = len(re.compile(r'\\ref{' + fig.label[0] + '}').findall(self._code))
                     fig.set_number_of_references(number)
 
     @property
