@@ -3,6 +3,8 @@ A quick and dirty parser for ArXiv
 ===================================
 
 """
+import sys
+import traceback
 from app import (ExportPDFLatexTemplate)
 
 
@@ -104,6 +106,9 @@ def main(template=None):
             else:
                 print("Not from HD... Skip.")
         except Exception as error:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            print("*** print_tb:")
+            traceback.print_tb(exc_traceback, limit=1, file=sys.stdout)
             print(error, '\n')
         print("Generating postage")
 

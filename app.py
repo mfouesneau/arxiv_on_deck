@@ -6,6 +6,7 @@ A quick and dirty parser for ArXiv
 
 from __future__ import (absolute_import, division, print_function)
 import sys
+import traceback
 import operator
 import re
 from glob import glob
@@ -347,8 +348,12 @@ class Document(object):
         """ parse to find cited figures in the text """
         for fig in self.figures:
             if fig.label is not None:
-                number = len(re.compile(r'\\ref{' + fig.label + '}').findall(self._code))
-                fig.set_number_of_references(number)
+                try:
+                    number = len(re.compile(r'\\ref{' + fig.label + '}').findall(self._code))
+                    fig.set_number_of_references(number)
+                except TypeError:
+                    # sometimes labels are duplicated into a list
+                    fig.set_number_of_references(number)
 
     @property
     def arxivertag(self):
@@ -555,15 +560,6 @@ class ExportPDFLatexTemplate(object):
         txt += r"""    \caption{Fig. """ + str(figure._number) + """: """ + figure.caption + r"""}"""
         txt += '\n' + """\end{minipage}""" + '\n%\n'
         return txt
-        '''
-        txt = r"""\resizebox{{{0:s}}}{!}{""".format(size) + '\n'
-        for fname in figure.files:
-            txt += r"\includegraphics[width=\textwidth, height=0.4\textheight,keepaspectratio]{"
-            txt += fname + r"}\\" + "\n"
-        txt += r"""    \caption{Fig. """ + str(figure._number) + """: """ + figure.caption + r"""}"""
-        txt += '\n' + """}""" + '\n%\n'
-        return txt
-        '''
 
     def apply_to_document(self, document):
         """ generate tex code from document """
@@ -624,6 +620,9 @@ class DocumentSource(Document):
                     new_data.append('\n%input from {0:s}\n'.format(fname) + auxilary + '\n')
                     prev_start, prev_end = start, end
                 except Exception as e:
+                    exc_type, exc_value, exc_traceback = sys.exc_info()
+                    print("*** print_tb:")
+                    traceback.print_tb(exc_traceback, limit=1, file=sys.stdout)
                     print(e)
                     pass
             new_data.append(data[prev_end:])
@@ -865,11 +864,17 @@ class ArXivPaper(object):
             try:
                 document.authors
             except Exception as error:
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                print("*** print_tb:")
+                traceback.print_tb(exc_traceback, limit=1, file=sys.stdout)
                 print(error)
                 document._authors = self.authors
             try:
                 document.abstract
             except Exception as error:
+                exc_type, exc_value, exc_traceback = sys.exc_info()
+                print("*** print_tb:")
+                traceback.print_tb(exc_traceback, limit=1, file=sys.stdout)
                 print(error)
                 document._abstract = self.abstract
             document._short_authors = self.short_authors
@@ -1066,4 +1071,7 @@ def main(template=None):
         try:
             paper.make_postage(template=template)
         except Exception as error:
+            exc_type, exc_value, exc_traceback = sys.exc_info()
+            print("*** print_tb:")
+            traceback.print_tb(exc_traceback, limit=1, file=sys.stdout)
             print(error)
