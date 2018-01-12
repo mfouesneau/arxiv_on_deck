@@ -23,6 +23,7 @@
 \usepackage{calc}
 \usepackage{ifthen}
 \usepackage{xparse} 
+\usepackage{xspace} 
 
 % Internal macros --------------------------------------------------------------
 
