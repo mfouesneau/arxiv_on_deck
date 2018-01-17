@@ -566,8 +566,8 @@ class ExportPDFLatexTemplate(object):
 
     def select_figures(self, document, N=3):
         """ decides which figures to show """
-        selection = sorted(document.figures, 
-                key=lambda x: x.number_of_references, 
+        selection = sorted(document.figures,
+                key=lambda x: x.number_of_references,
                 reverse=True)
         return selection[:N]
 
@@ -584,7 +584,7 @@ class ExportPDFLatexTemplate(object):
     def apply_to_document(self, document):
         """ generate tex code from document """
 
-        txt = self.template.replace('<MACROS>', "") # document._macros) 
+        txt = self.template.replace('<MACROS>', "") # document._macros)
         if document._identifier is not None:
             txt = txt.replace('<IDENTIFIER>',
                     r'\hl{{{0:s}}}'.format(document._identifier) or 'Abstract ')
@@ -616,7 +616,7 @@ class DocumentSource(Document):
         Document.__init__(self, data)
         self.fname = fname
         self.directory = directory
-        self.outputname = self.fname[:-len('.tex')] + '_cleaned.tex' 
+        self.outputname = self.fname[:-len('.tex')] + '_cleaned.tex'
 
     def _expand_auxilary_files(self, data, directory=''):
         # inputs
@@ -687,14 +687,14 @@ class DocumentSource(Document):
         if not os.path.isfile(self.fname.replace('.tex', '.aux')):
             outputname = self.fname.split('/')[-1]
             subprocess.call(compiler_command + outputname, shell=True)
-        
+
         # get the references compiled
         input_aux = self.fname.replace('.tex', '.aux')
         output_aux = self.outputname.replace('.tex', '.aux')
         with open(output_aux, 'w+') as fout:
             with open(input_aux, 'r') as fin:
                 for line in fin:
-                    if (('cite' in line) or ('citation' in line) or 
+                    if (('cite' in line) or ('citation' in line) or
                             ('label' in line) or ('toc' in line)):
                         fout.write(line)
 
@@ -822,7 +822,7 @@ class ArXivPaper(object):
         self.title = ""
         self._authors = []
         if highlight_authors is None:
-            self.highlight_authors = [] 
+            self.highlight_authors = []
         else:
             self.highlight_authors = highlight_authors
         self.comment = ""
@@ -894,7 +894,7 @@ class ArXivPaper(object):
             if self.appearedon is None:
                 document.date = self.date
             else:
-                document.date = self.appearedon
+                document.date = 'ArXiv: ' + self.appearedon
             return document
 
     def get_abstract(self):
@@ -921,7 +921,7 @@ class ArXivPaper(object):
 
 
 def get_new_papers(skip_replacements=False):
-    """ retrieve the new list from the website 
+    """ retrieve the new list from the website
     Parameters
     ----------
     skip_replacements: bool
@@ -950,7 +950,7 @@ def get_mitarbeiter(source='./mitarbeiter.txt'):
     Returns
     -------
     mitarbeiter: list(str)
-       authors to look for 
+       authors to look for
     """
     with open(source) as fin:
         mitarbeiter = []
@@ -1031,7 +1031,7 @@ def filter_papers(papers, fname_list):
 
 
 def check_required_words(source, word_list=[]):
-    """ Check the paper for words required for processing 
+    """ Check the paper for words required for processing
 
     Test is case insensitive but all words must appear
     """
@@ -1080,7 +1080,7 @@ def main(template=None):
     else:
         papers = [ArXivPaper(identifier=identifier.split(':')[-1])]
         keep = highlight_papers(papers, mitarbeiter)
-        
+
     for paper in keep:
         print(paper)
         try:
