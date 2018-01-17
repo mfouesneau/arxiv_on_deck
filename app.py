@@ -32,6 +32,20 @@ else:
     basestring = (str, unicode)
 
 
+__DEBUG__ = True
+
+
+def raise_or_warn(exception, limit=1, file=sys.stdout):
+    """ Raise of warn for exceptions. This helps debugging """
+    if __DEBUG__:
+        raise exception
+    else:
+        exc_type, exc_value, exc_traceback = sys.exc_info()
+        print("*** print_tb:")
+        traceback.print_tb(exc_traceback, limit=limit, file=file)
+        print(exception, '\n')
+
+
 def balanced_braces(args):
     """ Find tokens between {}
 
@@ -294,7 +308,10 @@ class Figure(object):
         files = []
         attr = self.info.get('plotone')
         if attr is not None:
-            files.append(attr)
+            if isinstance(attr, basestring):
+                files.append(attr)
+            else:
+                files.extend(attr)
         attr = self.info.get('includegraphics')
         if attr is not None:
             if isinstance(attr, basestring):
@@ -623,11 +640,7 @@ class DocumentSource(Document):
                     new_data.append('\n%input from {0:s}\n'.format(fname) + auxilary + '\n')
                     prev_start, prev_end = start, end
                 except Exception as e:
-                    exc_type, exc_value, exc_traceback = sys.exc_info()
-                    print("*** print_tb:")
-                    traceback.print_tb(exc_traceback, limit=1, file=sys.stdout)
-                    print(e)
-                    pass
+                    raise_or_warn(e)
             new_data.append(data[prev_end:])
             return '\n'.join(new_data)
         else:
@@ -867,18 +880,12 @@ class ArXivPaper(object):
             try:
                 document.authors
             except Exception as error:
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                print("*** print_tb:")
-                traceback.print_tb(exc_traceback, limit=1, file=sys.stdout)
-                print(error)
+                raise_or_warn(error)
                 document._authors = self.authors
             try:
                 document.abstract
             except Exception as error:
-                exc_type, exc_value, exc_traceback = sys.exc_info()
-                print("*** print_tb:")
-                traceback.print_tb(exc_traceback, limit=1, file=sys.stdout)
-                print(error)
+                raise_or_warn(error)
                 document._abstract = self.abstract
             document._short_authors = self.short_authors
             document._authors = self.authors
@@ -1043,6 +1050,9 @@ def running_options():
             ('-m', '--mitarbeiter', dict(dest="hl_authors", help="List of authors to highlight (co-workers)", default='./mitarbeiter.txt', type='str')),
             ('-i', '--id', dict(dest="identifier", help="Make postage of a single paper given by its arxiv id", default='None', type='str')),
             ('-a', '--authors', dict(dest="hl_authors", help="Highlight specific authors", default='None', type='str')),
+            ('--debug', dict(dest="debug", default=False, action="store_true",
+                help="Set to raise exceptions on errors")),
+
         )
 
     from optparse import OptionParser
@@ -1052,6 +1062,8 @@ def running_options():
         parser.add_option(*ko[:-1], **ko[-1])
 
     (options, args) = parser.parse_args()
+
+    __DEBUG__ = options.__dict__.get('debug', False)
 
     return options.__dict__
 
@@ -1074,7 +1086,4 @@ def main(template=None):
         try:
             paper.make_postage(template=template)
         except Exception as error:
-            exc_type, exc_value, exc_traceback = sys.exc_info()
-            print("*** print_tb:")
-            traceback.print_tb(exc_traceback, limit=1, file=sys.stdout)
-            print(error)
+            raise_or_warn(error)
