@@ -24,6 +24,7 @@
 \usepackage{ifthen}
 \usepackage{xparse} 
 \usepackage{xspace} 
+\usepackage{astrojournals}
 
 % Internal macros --------------------------------------------------------------
 
@@ -73,11 +74,11 @@
 \renewcommand{\frame}[1]{\colorbox{white}{#1}}   % using lines around frames for layout debugging
 
 % Often used journal defined commands
-\renewcommand{\arcsec}[1]{\hbox{$^{\prime\prime}$}}
-\renewcommand{\farcs}[1]{\hbox{$.\!\!^{\prime\prime}$}}
-\renewcommand{\degr}[1]{\hbox{$^\circ$}}
-\renewcommand{\arcmin}[1]{\hbox{$^\prime$}}
-\renewcommand{\farcm}[1]{\hbox{$.\mkern-4mu^\prime$}}
+\providecommand{\arcsec}[1]{\hbox{$^{\prime\prime}$}}
+\providecommand{\farcs}[1]{\hbox{$.\!\!^{\prime\prime}$}}
+\providecommand{\degr}[1]{\hbox{$^\circ$}}
+\providecommand{\arcmin}[1]{\hbox{$^\prime$}}
+\providecommand{\farcm}[1]{\hbox{$.\mkern-4mu^\prime$}}
 
 \DeclareMathAlphabet{\mathsc}{OT1}{cmr}{m}{sc}
 \def\testbx{bx}%
