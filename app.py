@@ -32,7 +32,7 @@ else:
     basestring = (str, unicode)
 
 
-__DEBUG__ = True
+__DEBUG__ = False
 
 
 def raise_or_warn(exception, limit=1, file=sys.stdout):
