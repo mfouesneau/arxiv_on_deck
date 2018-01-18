@@ -72,6 +72,24 @@
 % \renewcommand{\frame}{}   % using lines around frames for layout debugging
 \renewcommand{\frame}[1]{\colorbox{white}{#1}}   % using lines around frames for layout debugging
 
+% Often used journal defined commands
+\renewcommand{\arcsec}[1]{\hbox{$^{\prime\prime}$}}
+\renewcommand{\farcs}[1]{\hbox{$.\!\!^{\prime\prime}$}}
+\renewcommand{\degr}[1]{\hbox{$^\circ$}}
+\renewcommand{\arcmin}[1]{\hbox{$^\prime$}}
+\renewcommand{\farcm}[1]{\hbox{$.\mkern-4mu^\prime$}}
+
+\DeclareMathAlphabet{\mathsc}{OT1}{cmr}{m}{sc}
+\def\testbx{bx}%
+\DeclareRobustCommand{\ion}[1]{%
+\relax\ifmmode
+\ifx\testbx\f@series
+{\mathbf{#1\,\mathsc{#2}}}\else
+{\mathrm{#1\,\mathsc{#2}}}\fi
+\else\textup{#1\,{\mdseries\textsc{#2}}}%
+\fi}
+
+
 %Document found macros ------------------------------------------------------
 <MACROS>
 
