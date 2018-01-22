@@ -24,7 +24,7 @@
 \usepackage{ifthen}
 \usepackage{xparse} 
 \usepackage{xspace} 
-\usepackage{astrojournals}
+\usepackage{../deprecated_tex/astrojournals}
 
 % Internal macros --------------------------------------------------------------
 
@@ -80,16 +80,15 @@
 \providecommand{\arcmin}[1]{\hbox{$^\prime$}}
 \providecommand{\farcm}[1]{\hbox{$.\mkern-4mu^\prime$}}
 
-\DeclareMathAlphabet{\mathsc}{OT1}{cmr}{m}{sc}
-\def\testbx{bx}%
-\DeclareRobustCommand{\ion}[1]{%
-\relax\ifmmode
-\ifx\testbx\f@series
-{\mathbf{#1\,\mathsc{#2}}}\else
-{\mathrm{#1\,\mathsc{#2}}}\fi
-\else\textup{#1\,{\mdseries\textsc{#2}}}%
-\fi}
-
+\newcommand\ion[2]{#1$\;${%
+\ifx\@currsize\normalsize\small \else
+\ifx\@currsize\small\footnotesize \else
+\ifx\@currsize\footnotesize\scriptsize \else
+\ifx\@currsize\scriptsize\tiny \else
+\ifx\@currsize\large\normalsize \else
+\ifx\@currsize\Large\large
+\fi\fi\fi\fi\fi\fi
+\rmfamily\@Roman{#2}}\relax}% 
 
 %Document found macros ------------------------------------------------------
 <MACROS>
