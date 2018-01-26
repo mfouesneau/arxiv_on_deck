@@ -117,6 +117,7 @@ Jäger
 Jaeger
 Jahnke
 Jordan
+Jordán
 Jung
 Kacharov
 Kainulainen
@@ -206,7 +207,6 @@ Neumann
 Neumann
 Neumayer
 Nielbock
-Olofsson
 Onorbe
 Ortiz
 Otto

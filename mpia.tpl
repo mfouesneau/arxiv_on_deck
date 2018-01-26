@@ -77,6 +77,7 @@
 \providecommand{\arcsec}[1]{\hbox{$^{\prime\prime}$}}
 \providecommand{\farcs}[1]{\hbox{$.\!\!^{\prime\prime}$}}
 \providecommand{\degr}[1]{\hbox{$^\circ$}}
+\providecommand{\fdg}[1]{\hbox{$.\!\!^\circ$}}
 \providecommand{\arcmin}[1]{\hbox{$^\prime$}}
 \providecommand{\farcm}[1]{\hbox{$.\mkern-4mu^\prime$}}
 
