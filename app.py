@@ -35,9 +35,9 @@ else:
 __DEBUG__ = False
 
 
-def raise_or_warn(exception, limit=1, file=sys.stdout):
+def raise_or_warn(exception, limit=5, file=sys.stdout, debug=False):
     """ Raise of warn for exceptions. This helps debugging """
-    if __DEBUG__:
+    if (__DEBUG__) or (debug):
         raise exception
     else:
         exc_type, exc_value, exc_traceback = sys.exc_info()
@@ -278,7 +278,7 @@ class Figure(object):
         try:
             # careful with subfigure...
             if 'subfigure' in self._code:
-                self._parse_subfigure()
+                return self._parse_subfigure()
             else:
                 for command in commands:
                     count = self._code.count(command)
@@ -1064,6 +1064,9 @@ def running_options():
     (options, args) = parser.parse_args()
 
     __DEBUG__ = options.__dict__.get('debug', False)
+
+    if __DEBUG__:
+        print('Debug mode on')
 
     return options.__dict__
 
