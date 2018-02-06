@@ -769,7 +769,7 @@ class ArxivListHTMLParser(HTMLParser):
         self._author_tag = False
         self.skip_replacements = skip_replacements
         self._skip = False
-        self._date = ''
+        self._date = kwargs.pop('appearedon', '')
 
     def handle_starttag(self, tag, attrs):
         # paper starts with a dt tag
@@ -920,7 +920,7 @@ class ArXivPaper(object):
         print("PDF postage:", identifier + '.pdf' )
 
 
-def get_new_papers(skip_replacements=False):
+def get_new_papers(skip_replacements=False, appearedon=None):
     """ retrieve the new list from the website
     Parameters
     ----------
@@ -1050,9 +1050,8 @@ def running_options():
             ('-m', '--mitarbeiter', dict(dest="hl_authors", help="List of authors to highlight (co-workers)", default='./mitarbeiter.txt', type='str')),
             ('-i', '--id', dict(dest="identifier", help="Make postage of a single paper given by its arxiv id", default='None', type='str')),
             ('-a', '--authors', dict(dest="hl_authors", help="Highlight specific authors", default='None', type='str')),
-            ('--debug', dict(dest="debug", default=False, action="store_true",
-                help="Set to raise exceptions on errors")),
-
+            ('-d', '--date', dict(dest="date", help="Impose date on the printouts (e.g., today)", default='', type='str')),
+            ('--debug', dict(dest="debug", default=False, action="store_true", help="Set to raise exceptions on errors")),
         )
 
     from optparse import OptionParser
@@ -1071,6 +1070,16 @@ def running_options():
     return options.__dict__
 
 
+def check_date(datestr):
+    if 'today' in datestr.lower():
+        import datetime
+        return datetime.date.today().strftime('%d/%m/%y')
+    elif len(datestr) == 0:
+        return None
+    else:
+        return datestr
+
+
 def main(template=None):
     options = running_options()
     identifier = options.get('identifier', None)
@@ -1081,7 +1090,7 @@ def main(template=None):
         papers = get_new_papers(skip_replacements=True)
         keep = filter_papers(papers, mitarbeiter)
     else:
-        papers = [ArXivPaper(identifier=identifier.split(':')[-1])]
+        papers = [ArXivPaper(identifier=identifier.split(':')[-1], appearedon=check_date(options.get('date')))]
         keep = highlight_papers(papers, mitarbeiter)
 
     for paper in keep:

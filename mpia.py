@@ -65,7 +65,7 @@ class MPIATemplate(ExportPDFLatexTemplate):
 def main(template=None):
     from app import (get_mitarbeiter, filter_papers, ArXivPaper,
             highlight_papers, running_options, get_new_papers, shutil,
-            check_required_words)
+            check_required_words, check_date)
     options = running_options()
     identifier = options.get('identifier', None)
     paper_request_test = (identifier not in (None, 'None', '', 'none'))
@@ -79,10 +79,10 @@ def main(template=None):
         mitarbeiter = [author.strip() for author in hl_authors.split(',')]
 
     if identifier in (None, '', 'None'):
-        papers = get_new_papers(skip_replacements=True)
+        papers = get_new_papers(skip_replacements=True, appearedon=check_date(options.get('date')))
         keep = filter_papers(papers, mitarbeiter)
     else:
-        papers = [ArXivPaper(identifier=identifier.split(':')[-1])]
+        papers = [ArXivPaper(identifier=identifier.split(':')[-1], appearedon=check_date(options.get('date')))]
         keep = highlight_papers(papers, mitarbeiter)
 
     institute_words = ['Heidelberg', 'Max', 'Planck', '69117']
