@@ -106,7 +106,7 @@ def main(template=None):
             else:
                 print("Not from HD... Skip.")
         except Exception as error:
-            raise_or_warn(error)
+            raise_or_warn(error, debug=__DEBUG__)
         print("Generating postage")
 
 if __name__ == "__main__":

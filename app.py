@@ -633,7 +633,7 @@ class DocumentSource(Document):
                     fname = match.group().replace(r'\input', '').strip()
                     fname = fname.replace('{', '').replace('}', '').replace('.tex', '')   # just in case
                     print('      input command: ', fname)
-                    with open(directory + fname + '.tex', 'r') as fauxilary:
+                    with open(directory + fname + '.tex', 'r', errors="surrogateescape") as fauxilary:
                         auxilary = fauxilary.read()
                     start, end = match.span()
                     new_data.append(data[prev_end:start])
@@ -653,14 +653,16 @@ class DocumentSource(Document):
         print('multiple tex files')
         selected = None
         for e, fname in enumerate(fnames):
-            with open(fname, 'r') as finput:
+            with open(fname, 'r', errors="surrogateescape") as finput:
                 if 'documentclass' in finput.read():
                     selected = e, fname
                     break
+        print("Found main document in: ", selected)
         if selected is not None:
             print("Found main document in: ", selected[1])
             print(e, fname)
         if selected is not None:
+            print("Found main document in: ", selected[1])
             return selected[1]
         else:
             print('Could not locate the main document automatically. Little help please!')
@@ -692,7 +694,7 @@ class DocumentSource(Document):
         input_aux = self.fname.replace('.tex', '.aux')
         output_aux = self.outputname.replace('.tex', '.aux')
         with open(output_aux, 'w+') as fout:
-            with open(input_aux, 'r') as fin:
+            with open(input_aux, 'r', errors="surrogateescape") as fin:
                 for line in fin:
                     if (('cite' in line) or ('citation' in line) or
                             ('label' in line) or ('toc' in line)):
