@@ -5,14 +5,18 @@ A quick and dirty parser for ArXiv
 """
 import sys
 import traceback
-from app import (ExportPDFLatexTemplate, raise_or_warn, __DEBUG__)
+from app import (ExportPDFLatexTemplate, DocumentSource, raise_or_warn, __DEBUG__)
+import os
+import inspect
+#directories
+__ROOT__ = '/'.join(os.path.abspath(inspect.getfile(inspect.currentframe())).split('/')[:-1])
 
 
 class MPIATemplate(ExportPDFLatexTemplate):
 
     template = open('./mpia.tpl', 'r').read()
 
-    compiler = r"TEXINPUTS='../deprecated_tex:' pdflatex"
+    compiler = r"TEXINPUTS='{0:s}/deprecated_tex:' pdflatex".format(__ROOT__)
     compiler_options = r"-enable-write18 -shell-escape -interaction=nonstopmode"
 
     def short_authors(self, document):
@@ -71,6 +75,7 @@ def main(template=None):
     paper_request_test = (identifier not in (None, 'None', '', 'none'))
     hl_authors = options.get('hl_authors', None)
     hl_request_test = (hl_authors not in (None, 'None', '', 'none'))
+    sourcedir = options.get('sourcedir', None)
 
     if not hl_request_test:
         mitarbeiter_list = options.get('mitarbeiter', './mitarbeiter.txt')
@@ -78,7 +83,16 @@ def main(template=None):
     else:
         mitarbeiter = [author.strip() for author in hl_authors.split(',')]
 
-    if identifier in (None, '', 'None'):
+    if sourcedir not in (None, ''):
+        paper = DocumentSource(sourcedir)
+        paper.identifier = sourcedir
+        keep = highlight_papers([paper], mitarbeiter)
+        paper.compile(template=template)
+        name = paper.outputname.replace('.tex', '.pdf').split('/')[-1]
+        shutil.move(sourcedir + '/' + name, paper.identifier + '.pdf')
+        print("PDF postage:", paper.identifier + '.pdf' )
+        return 
+    elif identifier in (None, '', 'None'):
         papers = get_new_papers(skip_replacements=True, appearedon=check_date(options.get('date')))
         keep = filter_papers(papers, mitarbeiter)
     else:

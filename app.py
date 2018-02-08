@@ -18,6 +18,11 @@ from urllib.request import urlopen
 import tarfile
 import shutil
 
+import inspect
+#directories
+__ROOT__ = '/'.join(os.path.abspath(inspect.getfile(inspect.currentframe())).split('/')[:-1])
+
+
 PY3 = sys.version_info[0] > 2
 
 if PY3:
@@ -380,7 +385,7 @@ class Document(object):
         """ check for arxiver tag selecting figures """
         tags = None
         if r"%@arxiver" in self._code:
-            start, end = list(re.compile(r'@arxiver{.*}').finditer(self._body))[0].span()
+            start, end = list(re.compile(r'@arxiver{.*}').finditer(self._code))[0].span()
             tags = balanced_braces(self._code[start:end])[0]
         return tags
 
@@ -403,7 +408,7 @@ class Document(object):
         """ Short authors """
         if self._short_authors is not None:
             return self._short_authors
-        if len(self.authors) < 5:
+        if isinstance(self.authors, basestring) or len(self.authors) < 5:
             return self.authors
         else:
             if any(name in self._authors[0] for name in set(self.highlight_authors)):
@@ -557,7 +562,7 @@ class ExportPDFLatexTemplate(object):
 \end{document}
 """
 
-    compiler = r"TEXINPUTS='../deprecated_tex:' pdflatex"
+    compiler = r"TEXINPUTS='{0:s}/deprecated_tex:' pdflatex".format(__ROOT__)
     compiler_options = r"-enable-write18 -shell-escape -interaction=nonstopmode"
 
     def short_authors(self, document):
@@ -566,6 +571,13 @@ class ExportPDFLatexTemplate(object):
 
     def select_figures(self, document, N=3):
         """ decides which figures to show """
+        try:
+            if document.arxivertag:
+                selected = {fig.files[0]:fig for fig in document.figures if fig.files[0] in document.arxivertag}
+                return [selected[fname] for fname in document.arxivertag.replace(',', '').split()]   ## Keep the same ordering
+        except Exception as e:
+            raise_or_warn(e)
+
         selection = sorted(document.figures,
                 key=lambda x: x.number_of_references,
                 reverse=True)
@@ -1049,6 +1061,7 @@ def check_required_words(source, word_list=[]):
 def running_options():
 
     opts = (
+            ('-s', '--source', dict(dest="sourcedir", help="Use an existing source directory", default='', type='str')),
             ('-m', '--mitarbeiter', dict(dest="hl_authors", help="List of authors to highlight (co-workers)", default='./mitarbeiter.txt', type='str')),
             ('-i', '--id', dict(dest="identifier", help="Make postage of a single paper given by its arxiv id", default='None', type='str')),
             ('-a', '--authors', dict(dest="hl_authors", help="Highlight specific authors", default='None', type='str')),
@@ -1085,10 +1098,20 @@ def check_date(datestr):
 def main(template=None):
     options = running_options()
     identifier = options.get('identifier', None)
+    sourcedir = options.get('sourcedir', None)
 
     mitarbeiter_list = options.get('mitarbeiter', './mitarbeiter.txt')
     mitarbeiter = get_mitarbeiter(mitarbeiter_list)
-    if identifier in (None, '', 'None'):
+    if sourcedir not in (None, ''):
+        paper = DocumentSource(sourcedir)
+        paper.identifier = sourcedir
+        keep = highlight_papers([paper], mitarbeiter)
+        paper.compile(template=template)
+        name = paper.outputname.replace('.tex', '.pdf').split('/')[-1]
+        shutil.move(sourcedir + '/' + name, paper.identifier + '.pdf')
+        print("PDF postage:", paper.identifier + '.pdf' )
+        return 
+    elif identifier in (None, '', 'None'):
         papers = get_new_papers(skip_replacements=True)
         keep = filter_papers(papers, mitarbeiter)
     else:
