@@ -235,6 +235,8 @@
 \setlength\gap{4pt}
 \setlength\Widthtempl{\dimexpr0.5\textwidth-0.75\gap\relax}
 \setlength\Highttempl{.67\textheight}
+\def\maxheight{0.25\paperheight}
+\def\maxwidth{\textwidth}
 \parindent0pt
 \fboxsep0pt
 \fboxrule0pt
@@ -253,6 +255,9 @@
 \providecommand{\fdg}[1]{\hbox{$.\!\!^\circ$}}
 \providecommand{\arcmin}[1]{\hbox{$^\prime$}}
 \providecommand{\farcm}[1]{\hbox{$.\mkern-4mu^\prime$}}
+\providecommand{\la}{\lesssim}
+\providecommand{\ga}{\gtrsim}
+
 
 \newcommand\ion[2]{#1$\;${%
 \ifx\@currsize\normalsize\small \else
