@@ -411,13 +411,13 @@ class Document(object):
         if isinstance(self.authors, basestring) or len(self.authors) < 5:
             return self.authors
         else:
-            if any(name in self._authors[0] for name in set(self.highlight_authors)):
+            if any(name in self._authors[0] for name in self.highlight_authors):
                 authors = r'\hl{' + self._authors[0] + r'}, et al.'
             else:
                 authors = self._authors[0] + ", et al."
         if self.highlight_authors:
             incl_authors = []
-            for name in set(self.highlight_authors):
+            for name in self.highlight_authors:
                 if name != self._authors[0]:
                     incl_authors.append(r'\hl{' + name + r'}')
             authors += '; incl. ' + ', '.join(incl_authors)
