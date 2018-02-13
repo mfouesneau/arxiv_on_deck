@@ -222,6 +222,7 @@
 
 % Inhibit most of article macros
 \renewcommand{\thanks}[1]{}
+\renewcommand{\footnote}[1]{}
 \renewcommand{\caption}[1]{{\raggedright\scriptsize{#1}}}
 \providecommand{\acronymused}[1]{}
 \providecommand{\altaffilmark}[1]{}
