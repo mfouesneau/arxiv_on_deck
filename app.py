@@ -908,7 +908,7 @@ class ArXivPaper(object):
             if self.appearedon is None:
                 document.date = self.date
             else:
-                document.date = 'ArXiv: ' + self.appearedon
+                document.date = 'Appeared on ' + self.appearedon
             return document
 
     def get_abstract(self):
@@ -1002,8 +1002,8 @@ def highlight_papers(papers, fname_list):
     for paper in papers:
         print(paper)
         paper.highlight_authors = []
-        for name in fname_list:
-            for author in paper._authors:
+        for author in paper._authors:
+            for name in fname_list:
                 if name in author:
                     # perfect match on family name
                     # TODO: add initials test
