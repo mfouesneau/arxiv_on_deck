@@ -250,12 +250,12 @@
 \renewcommand{\frame}[1]{\colorbox{white}{#1}}   % using lines around frames for layout debugging
 
 % Often used journal defined commands
-\providecommand{\arcsec}[1]{\hbox{$^{\prime\prime}$}}
-\providecommand{\farcs}[1]{\hbox{$.\!\!^{\prime\prime}$}}
-\providecommand{\degr}[1]{\hbox{$^\circ$}}
-\providecommand{\fdg}[1]{\hbox{$.\!\!^\circ$}}
-\providecommand{\arcmin}[1]{\hbox{$^\prime$}}
-\providecommand{\farcm}[1]{\hbox{$.\mkern-4mu^\prime$}}
+\providecommand{\arcsec}{\hbox{$^{\prime\prime}$}}
+\providecommand{\farcs}{\hbox{$.\!\!^{\prime\prime}$}}
+\providecommand{\degr}{\hbox{$^\circ$}}
+\providecommand{\fdg}{\hbox{$.\!\!^\circ$}}
+\providecommand{\arcmin}{\hbox{$^\prime$}}
+\providecommand{\farcm}{\hbox{$.\mkern-4mu^\prime$}}
 \providecommand{\la}{\lesssim}
 \providecommand{\ga}{\gtrsim}
 
