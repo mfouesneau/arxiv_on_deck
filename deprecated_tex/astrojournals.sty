@@ -116,3 +116,62 @@
   \let\apjlett=\apjl
   \let\apjsupp=\apjs
   \let\applopt=\ao
+
+
+% often used macros in journals (AASTex)
+\providecommand\ion[2]{#1$\;${%
+  \ifx\@currsize\normalsize\small \else
+  \ifx\@currsize\small\footnotesize \else
+  \ifx\@currsize\footnotesize\scriptsize \else
+  \ifx\@currsize\scriptsize\tiny \else
+  \ifx\@currsize\large\normalsize \else
+  \ifx\@currsize\Large\large
+  \fi\fi\fi\fi\fi\fi
+  \rmfamily\@Roman{#2}}\relax}% 
+\providecommand\case[2]{\mbox{$\frac{#1}{#2}$}}% 
+\providecommand\slantfrac{\case}% 
+\providecommand\onehalf{\slantfrac{1}{2}}% 
+\providecommand\onethird{\slantfrac{1}{3}}% 
+\providecommand\twothirds{\slantfrac{2}{3}}% 
+\providecommand\onequarter{\slantfrac{1}{4}}% 
+\providecommand\threequarters{\slantfrac{3}{4}}% 
+\providecommand\ubvr{\mbox{$U\!BV\!R$}}%% UBVR system 
+\providecommand\ub{\mbox{$U\!-\!B$}}%   % U-B 
+\providecommand\bv{\mbox{$B\!-\!V$}}%   % B-V 
+\reprovidecommand\vr{\mbox{$V\!-\!R$}}%   % V-R ++
+\providecommand\ur{\mbox{$U\!-\!R$}}%   % U-R 
+%% need this change so that it works correctly in tables:
+{\catcode`\$=\active
+\gdef\nodata{ ~$\cdots$~ }}% 
+\providecommand\diameter{\ooalign{\hfil/\hfil\crcr\mathhexbox20D}}% 
+\providecommand\degr{\arcdeg}% 
+\providecommand\Sun{\sun}% 
+\providecommand\Sol{\sun}% 
+\providecommand\sun{\odot}% 
+\providecommand\Mercury{\astro{\char1}}% Mercury symbol, "1" 
+\providecommand\Venus{\astro{\char2}}% Venus symbol, "2" 
+\providecommand\Earth{\earth}% 
+\providecommand\Terra{\earth}% 
+\providecommand\earth{\oplus}% 
+\providecommand\Mars{\astro{\char4}}% Mars symbol, "4" 
+\providecommand\Jupiter{\astro{\char5}}% Jupiter symbol, "5" 
+\providecommand\Saturn{\astro{\char6}}% Saturn symbol, "6" 
+\providecommand\Uranus{\astro{\char7}}% Uranus symbol, "7" 
+\providecommand\Neptune{\astro{\char8}}% Neptune symbol, "8" 
+\providecommand\Pluto{\astro{\char9}}% Pluo symbol, "9" 
+\providecommand\Moon{\astro{\char10}}% Moon symbol, "M" 
+\providecommand\Luna{\Moon}% 
+\providecommand\Aries{\astro{\char11}}% 
+\providecommand\VEq{\Aries}% vernal equinox (Aries) 
+\providecommand\Taurus{\astro{\char12}}% 
+\providecommand\Gemini{\astro{\char13}}% 
+\providecommand\Cancer{\astro{\char14}}% 
+\providecommand\Leo{\astro{\char15}}% 
+\providecommand\Virgo{\astro{\char16}}% 
+\providecommand\Libra{\astro{\char17}}% 
+\providecommand\AEq{\Libra}% autumnal equinox (Libra) 
+\providecommand\Scorpius{\astro{\char18}}% 
+\providecommand\Sagittarius{\astro{\char19}}% 
+\providecommand\Capricornus{\astro{\char20}}% 
+\providecommand\Aquarius{\astro{\char21}}% 
+\providecommand\Pisces{\astro{\char22}}% 
