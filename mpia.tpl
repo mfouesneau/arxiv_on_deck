@@ -260,7 +260,7 @@
 \providecommand{\ga}{\gtrsim}
 
 
-\newcommand\ion[2]{#1$\;${%
+\providecommand\ion[2]{#1$\;${%
 \ifx\@currsize\normalsize\small \else
 \ifx\@currsize\small\footnotesize \else
 \ifx\@currsize\footnotesize\scriptsize \else
