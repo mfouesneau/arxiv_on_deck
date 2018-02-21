@@ -764,7 +764,7 @@ class ArxivAbstractHTMLParser(HTMLParser):
         if self._abstract_tag:
             self.abstract = data.strip()
         if self._comment_tag:
-            self.comment = data.strip()
+            self.comment = re.escape(data.strip())
             self._comment_tag = False
         if 'Submitted on' in data:
             self.date = data.strip()
