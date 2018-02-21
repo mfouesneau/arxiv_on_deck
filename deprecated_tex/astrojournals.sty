@@ -119,6 +119,39 @@
 
 
 % often used macros in journals (AASTex)
+\providecommand\phn{\phantom{0}}% 
+\providecommand\phd{\phantom{.}}% 
+\providecommand\phs{\phantom{$-$}}% 
+\providecommand\phm[1]{\phantom{#1}}% 
+\let\la=\lesssim            % For Springer A&A compliance... 
+\let\ga=\gtrsim 
+\providecommand\sq{\mbox{\rlap{$\sqcap$}$\sqcup$}}% 
+\providecommand\arcdeg{\mbox{$^\circ$}}% 
+\providecommand\arcmin{\mbox{$^\prime$}}% 
+\providecommand\arcsec{\mbox{$^{\prime\prime}$}}% 
+\providecommand\fd{\mbox{$.\!\!^{\mathrm d}$}}% 
+\providecommand\fh{\mbox{$.\!\!^{\mathrm h}$}}% 
+\providecommand\fm{\mbox{$.\!\!^{\mathrm m}$}}% 
+\providecommand\fs{\mbox{$.\!\!^{\mathrm s}$}}% 
+\providecommand\fdg{\mbox{$.\!\!^\circ$}}% 
+\providecommand\farcm@mss{\mbox{$.\mkern-4mu^\prime$}}% 
+\let\farcm\farcm@mss 
+\providecommand\farcs@mss{\mbox{$.\!\!^{\prime\prime}$}}% 
+\let\farcs\farcs@mss 
+\providecommand\fp{\mbox{$.\!\!^{\scriptscriptstyle\mathrm p}$}}% 
+\providecommand\micron{\mbox{$\mu$m}}% 
+\def\farcm@apj{% 
+ \mbox{.\kern -0.7ex\raisebox{.9ex}{\scriptsize$\prime$}}% 
+}% 
+\def\farcs@apj{% 
+ \mbox{% 
+  \kern  0.13ex.% 
+  \kern -0.95ex\raisebox{.9ex}{\scriptsize$\prime\prime$}% 
+  \kern -0.1ex% 
+ }% 
+}% 
+
+
 \providecommand\ion[2]{#1$\;${%
   \ifx\@currsize\normalsize\small \else
   \ifx\@currsize\small\footnotesize \else
@@ -138,7 +171,7 @@
 \providecommand\ubvr{\mbox{$U\!BV\!R$}}%% UBVR system 
 \providecommand\ub{\mbox{$U\!-\!B$}}%   % U-B 
 \providecommand\bv{\mbox{$B\!-\!V$}}%   % B-V 
-\reprovidecommand\vr{\mbox{$V\!-\!R$}}%   % V-R ++
+\providecommand\vr{\mbox{$V\!-\!R$}}%   % V-R ++
 \providecommand\ur{\mbox{$U\!-\!R$}}%   % U-R 
 %% need this change so that it works correctly in tables:
 {\catcode`\$=\active
