@@ -710,7 +710,7 @@ class DocumentSource(Document):
                 for line in fin:
                     if (('cite' in line) or ('citation' in line) or
                             ('label' in line) or ('toc' in line)):
-                        fout.write(line)
+                        fout.write(line.encode('utf-8', 'surrogateescape').decode('utf-8', 'replace'))
 
         # compile output
         outputname = self.outputname.split('/')[-1]
