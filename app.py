@@ -1033,8 +1033,8 @@ def filter_papers(papers, fname_list):
         paper.highlight_authors = []
         matches = [name for name in fname_list if ' ' + name in paper.authors]
         if matches:
-            for name in fname_list:
-                for author in paper._authors:
+            for author in paper._authors:
+                for name in fname_list:
                     if name in author:
                         # TODO: add initials test
                         if (name == author.split()[-1]):
