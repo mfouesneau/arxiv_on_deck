@@ -955,6 +955,44 @@ def get_new_papers(skip_replacements=False, appearedon=None):
     return papers
 
 
+def get_catchup_papers(since=None, skip_replacements=False, appearedon=None):
+    """ retrieve the new list from the website
+    Parameters
+    ----------
+    since: string
+        data to start from
+    skip_replacements: bool
+        set to skip parsing the replacements
+
+    Returns
+    -------
+    papers: list(ArXivPaper)
+        list of ArXivPaper objects
+    """
+    from datetime import datetime, date
+    if since is None:
+        since = date.today().strftime('%d/%m/%y')
+    elif 'today' in since.lower():
+        since = date.today().strftime('%d/%m/%y')
+
+    try:
+        # dd/mm/yy
+        _since = datetime.strptime(since, '%d/%m/%y')
+    except ValueError:
+        # dd/mm/yyyy
+        _since = datetime.strptime(since, '%d/%m/%Y')
+
+    url = "https://arxiv.org/catchup?syear={year:d}&smonth={month:d}&sday={day:d}&num=1000&archive=astro-ph&method=without"
+    html = urlopen(url.format(day=_since.day, 
+                              month=_since.month, 
+                              year=_since.year)).read().decode('utf-8')
+
+    parser = ArxivListHTMLParser(skip_replacements=skip_replacements)
+    parser.feed(html)
+    papers = parser.papers
+    return papers
+
+
 def get_mitarbeiter(source='./mitarbeiter.txt'):
     """ returns the list of authors of interests.
     Needed to parse the input list to get initials and last name.
@@ -1066,6 +1104,7 @@ def running_options():
             ('-i', '--id', dict(dest="identifier", help="Make postage of a single paper given by its arxiv id", default='None', type='str')),
             ('-a', '--authors', dict(dest="hl_authors", help="Highlight specific authors", default='None', type='str')),
             ('-d', '--date', dict(dest="date", help="Impose date on the printouts (e.g., today)", default='', type='str')),
+            ('-c', '--catchup', dict(dest="since", help="Catchup arxiv from given date (e.g., today, 03/01/2018)", default='today', type='str')),
             ('--debug', dict(dest="debug", default=False, action="store_true", help="Set to raise exceptions on errors")),
         )
 
@@ -1099,6 +1138,7 @@ def main(template=None):
     options = running_options()
     identifier = options.get('identifier', None)
     sourcedir = options.get('sourcedir', None)
+    catchup_since = options.get('since', None)
 
     mitarbeiter_list = options.get('mitarbeiter', './mitarbeiter.txt')
     mitarbeiter = get_mitarbeiter(mitarbeiter_list)
@@ -1112,7 +1152,10 @@ def main(template=None):
         print("PDF postage:", paper.identifier + '.pdf' )
         return 
     elif identifier in (None, '', 'None'):
-        papers = get_new_papers(skip_replacements=True)
+        if catchup_since not in (None, '', 'None'):
+            papers = get_catchup_papers(skip_replacements=True)
+        else:
+            papers = get_new_papers(skip_replacements=True)
         keep = filter_papers(papers, mitarbeiter)
     else:
         papers = [ArXivPaper(identifier=identifier.split(':')[-1], appearedon=check_date(options.get('date')))]

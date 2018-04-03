@@ -69,13 +69,14 @@ class MPIATemplate(ExportPDFLatexTemplate):
 def main(template=None):
     from app import (get_mitarbeiter, filter_papers, ArXivPaper,
             highlight_papers, running_options, get_new_papers, shutil,
-            check_required_words, check_date)
+            get_catchup_papers, check_required_words, check_date)
     options = running_options()
     identifier = options.get('identifier', None)
     paper_request_test = (identifier not in (None, 'None', '', 'none'))
     hl_authors = options.get('hl_authors', None)
     hl_request_test = (hl_authors not in (None, 'None', '', 'none'))
     sourcedir = options.get('sourcedir', None)
+    catchup_since = options.get('since', None)
 
     if not hl_request_test:
         mitarbeiter_list = options.get('mitarbeiter', './mitarbeiter.txt')
@@ -93,7 +94,10 @@ def main(template=None):
         print("PDF postage:", paper.identifier + '.pdf' )
         return 
     elif identifier in (None, '', 'None'):
-        papers = get_new_papers(skip_replacements=True, appearedon=check_date(options.get('date')))
+        if catchup_since not in (None, '', 'None'):
+            papers = get_catchup_papers(skip_replacements=True)
+        else:
+            papers = get_new_papers(skip_replacements=True, appearedon=check_date(options.get('date')))
         keep = filter_papers(papers, mitarbeiter)
     else:
         papers = [ArXivPaper(identifier=identifier.split(':')[-1], appearedon=check_date(options.get('date')))]
