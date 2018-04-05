@@ -905,7 +905,7 @@ class ArXivPaper(object):
             document._authors = self.authors
             document._identifier = self.identifier
             document.comment = self.comment
-            if self.appearedon is None:
+            if self.appearedon in (None, '', 'None'):
                 document.date = self.date
             else:
                 document.date = 'Appeared on ' + self.appearedon
@@ -934,7 +934,7 @@ class ArXivPaper(object):
         print("PDF postage:", identifier + '.pdf' )
 
 
-def get_new_papers(skip_replacements=False, appearedon=None):
+def get_new_papers(skip_replacements=True, appearedon=None):
     """ retrieve the new list from the website
     Parameters
     ----------
@@ -1104,7 +1104,7 @@ def running_options():
             ('-i', '--id', dict(dest="identifier", help="Make postage of a single paper given by its arxiv id", default='None', type='str')),
             ('-a', '--authors', dict(dest="hl_authors", help="Highlight specific authors", default='None', type='str')),
             ('-d', '--date', dict(dest="date", help="Impose date on the printouts (e.g., today)", default='', type='str')),
-            ('-c', '--catchup', dict(dest="since", help="Catchup arxiv from given date (e.g., today, 03/01/2018)", default='today', type='str')),
+            ('-c', '--catchup', dict(dest="since", help="Catchup arxiv from given date (e.g., today, 03/01/2018)", default='', type='str')),
             ('--debug', dict(dest="debug", default=False, action="store_true", help="Set to raise exceptions on errors")),
         )
 
@@ -1152,7 +1152,7 @@ def main(template=None):
         print("PDF postage:", paper.identifier + '.pdf' )
         return 
     elif identifier in (None, '', 'None'):
-        if catchup_since not in (None, '', 'None'):
+        if catchup_since not in (None, '', 'None', 'today'):
             papers = get_catchup_papers(skip_replacements=True)
         else:
             papers = get_new_papers(skip_replacements=True)
