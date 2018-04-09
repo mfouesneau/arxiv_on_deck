@@ -152,7 +152,6 @@ Lee
 Lehmitz
 Leinert
 Lemke
-Lendl
 Lenz
 Lenzen
 Leslie
@@ -310,7 +309,6 @@ Zhang
 Zhu
 Zhuang
 Zimmermann
-Zschaechner
 Faesi
 Gallagher
 Hansen
