@@ -227,6 +227,11 @@
 \providecommand{\acronymused}[1]{}
 \providecommand{\altaffilmark}[1]{}
 \providecommand{\keywords}{}
+\renewcommand{\keywords}{}
+\providecommand{\and}{}
+\renewcommand{\and}{}
+\providecommand{\inst}[1]{}
+\renewcommand{\inst}[1]{}
 
 % Layout definition --------------------------------------------------------
 % sets some dimensions

@@ -13,16 +13,34 @@ __ROOT__ = '/'.join(os.path.abspath(inspect.getfile(inspect.currentframe())).spl
 
 
 class MPIATemplate(ExportPDFLatexTemplate):
+    """ Template used at MPIA 
+    which shows 3 figures and adapt the layout depending of figure aspect ratios
+    """
 
     template = open('./mpia.tpl', 'r').read()
 
+    # Include often missing libraries
     compiler = r"TEXINPUTS='{0:s}/deprecated_tex:' pdflatex".format(__ROOT__)
     compiler_options = r"-enable-write18 -shell-escape -interaction=nonstopmode"
 
     def short_authors(self, document):
+        """ How to return short version of author list 
+
+        Parameters
+        ----------
+        document: app.Document instance
+            latex document
+
+        returns
+        -------
+        short_authors: string
+            representation of the authors
+        """
+        print(document.short_authors)
         return document.short_authors
 
     def figure_to_latex(self, figure):
+        """ How to include the figures """
         fig = ""
         for fname in figure.files:
             fig += r"    \includegraphics[width=\maxwidth, height=\maxheight,keepaspectratio]{"
@@ -33,7 +51,18 @@ class MPIATemplate(ExportPDFLatexTemplate):
         return fig, caption
 
     def apply_to_document(self, document):
+        """ Fill the template 
 
+        Parameters
+        ----------
+        document: app.Document instance
+            latex document
+
+        Returns
+        -------
+        txt: string
+            latex source of the final document
+        """
         txt = self.template.replace('<MACROS>', document._macros)
         if document._identifier is not None:
             txt = txt.replace('<IDENTIFIER>',
@@ -67,9 +96,10 @@ class MPIATemplate(ExportPDFLatexTemplate):
 
 
 def main(template=None):
+    """ Main function """
     from app import (get_mitarbeiter, filter_papers, ArXivPaper,
-            highlight_papers, running_options, get_new_papers, shutil,
-            get_catchup_papers, check_required_words, check_date)
+                     highlight_papers, running_options, get_new_papers,
+                     shutil, get_catchup_papers, check_required_words, check_date)
     options = running_options()
     identifier = options.get('identifier', None)
     paper_request_test = (identifier not in (None, 'None', '', 'none'))
@@ -124,7 +154,7 @@ def main(template=None):
             else:
                 print("Not from HD... Skip.")
         except Exception as error:
-            raise_or_warn(error, debug=__DEBUG__)
+            raise_or_warn(error, debug=True)
         print("Generating postage")
 
 if __name__ == "__main__":

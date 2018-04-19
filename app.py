@@ -351,7 +351,7 @@ class Document(object):
     """ Latex Document structure """
 
     def __init__(self, data):
-        self._code = data
+        self._code = self._clean_latex_comments(data)
         self._header = get_latex_header(self._code)
         self._body = get_latex_body(self._code)
         self._macros = get_latex_macros(self._header)
@@ -367,6 +367,9 @@ class Document(object):
         self.date = ''
 
         self._update_figure_references()
+
+    def _clean_latex_comments(self, code):
+        return re.sub(r'(?<!\\)%.*\n', '', code)
 
     def _update_figure_references(self):
         """ parse to find cited figures in the text """
@@ -399,14 +402,14 @@ class Document(object):
     @property
     def authors(self):
         """ Document authors """
-        if self._authors is None:
+        if self._authors in (None, '', 'None'):
             self._authors = parse_command('author', self._code)
         return self._authors
 
     @property
     def short_authors(self):
         """ Short authors """
-        if self._short_authors is not None:
+        if self._short_authors not in (None, '', 'None'):
             return self._short_authors
         if isinstance(self.authors, basestring) or len(self.authors) < 5:
             return self.authors
@@ -737,7 +740,8 @@ class ArxivAbstractHTMLParser(HTMLParser):
         if tag == 'h1':
             self._title_tag = True
         if (tag == 'a') & (len(attrs) > 0):
-            if '/find/astro-ph/1/au:' in attrs[0][1]:
+            if "searchtype=author" in attrs[0][1]:
+            # if '/find/astro-ph/1/au:' in attrs[0][1]:
                 self._author_tag = True
         if tag == 'blockquote':
             self._abstract_tag = True
