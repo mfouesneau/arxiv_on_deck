@@ -104,6 +104,7 @@ Ho
 Hoard
 Hofferbert
 Hoffmann
+Hogg
 Hoelscher
 Hölscher
 Hormuth
@@ -203,8 +204,6 @@ Musso-Barcucci
 Naranjo
 Nauss
 Neidel
-Ness
-Neumann
 Neumann
 Neumayer
 Nielbock
