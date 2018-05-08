@@ -139,6 +139,9 @@ def main(template=None):
         keep = highlight_papers(papers, mitarbeiter)
 
     institute_words = ['Heidelberg', 'Max', 'Planck', '69117']
+
+    # make sure no duplicated papers
+    keep = {k.identifier: k for k in keep}.values()
         
     for paper in keep:
         print(paper)
