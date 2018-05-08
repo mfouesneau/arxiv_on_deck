@@ -1122,9 +1122,6 @@ def running_options():
 
     __DEBUG__ = options.__dict__.get('debug', False)
 
-    if __DEBUG__:
-        print('Debug mode on')
-
     return options.__dict__
 
 
