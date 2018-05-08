@@ -47,7 +47,7 @@ class MPIATemplate(ExportPDFLatexTemplate):
             fig += fname + r"}\\" + "\n"
         if len(figure.files) > 1:
             fig = fig.replace(r'\maxwidth', '{0:0.1f}'.format(0.9 * 1. / len(figure.files)) + r'\maxwidth')
-        caption = r"""    \caption{Fig. """ + str(figure._number) + """: """ + figure.caption + r"""}"""
+        caption = r"""    \caption{Fig. """ + str(figure._number) + """: """ + str(figure.caption) + r"""}"""
         return fig, caption
 
     def apply_to_document(self, document):
@@ -107,6 +107,11 @@ def main(template=None):
     hl_request_test = (hl_authors not in (None, 'None', '', 'none'))
     sourcedir = options.get('sourcedir', None)
     catchup_since = options.get('since', None)
+
+    __DEBUG__ = options.get('debug', False)
+
+    if __DEBUG__:
+        print('Debug mode on')
 
     if not hl_request_test:
         mitarbeiter_list = options.get('mitarbeiter', './mitarbeiter.txt')
