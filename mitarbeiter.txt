@@ -276,7 +276,6 @@ Stern
 Süveges
 Sueveges
 Syed
-Teague
 Tomicic
 Trifonov
 Tsatsi
@@ -352,3 +351,12 @@ Avenhaus
 Hauser
 Carpenter
 Frankel
+Bertrang
+Zakhozhay
+Perrera
+Xiang
+Pessa
+Pereira
+Flores
+Koenig
+König
