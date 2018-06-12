@@ -292,6 +292,7 @@
 \textbf{\large{<AUTHORS>}}
 
 \hl{<DATE>} -- <COMMENTS>
+
 \vspace{1em}
 
 % Abstract

@@ -1,0 +1,143 @@
+% SVMult DOCUMENT CLASS OPTION MULTPHYS -- for retaining the diversity of layouts
+%
+% This is an enhancement for the
+% LaTeX document class for Springer contributed books (SVMULT)
+%
+%%
+%%
+%% \CharacterTable
+%%  {Upper-case    \A\B\C\D\E\F\G\H\I\J\K\L\M\N\O\P\Q\R\S\T\U\V\W\X\Y\Z
+%%   Lower-case    \a\b\c\d\e\f\g\h\i\j\k\l\m\n\o\p\q\r\s\t\u\v\w\x\y\z
+%%   Digits        \0\1\2\3\4\5\6\7\8\9
+%%   Exclamation   \!     Double quote  \"     Hash (number) \#
+%%   Dollar        \$     Percent       \%     Ampersand     \&
+%%   Acute accent  \'     Left paren    \(     Right paren   \)
+%%   Asterisk      \*     Plus          \+     Comma         \,
+%%   Minus         \-     Point         \.     Solidus       \/
+%%   Colon         \:     Semicolon     \;     Less than     \<
+%%   Equals        \=     Greater than  \>     Question mark \?
+%%   Commercial at \@     Left bracket  \[     Backslash     \\
+%%   Right bracket \]     Circumflex    \^     Underscore    \_
+%%   Grave accent  \`     Left brace    \{     Vertical bar  \|
+%%   Right brace   \}     Tilde         \~}
+\ProvidesFile{svmultphys.clo}
+              [2002/10/08 v1.0
+      SVMono class option for multi authored books in physics]
+%
+\AtEndOfClass{%
+% inform user
+\typeout{%
+^^J+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+^^J+ svmultphys.clo 2002/10/01 v1.0 SVMult class option to establish +
+^^J+ the layout for multi authored (contributed) books in physics \space\space\space+
+^^J+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++^^J}%
+\setlength{\textwidth}{11.7cm}%
+\setlength{\textheight}{18.9cm}%
+%
+\def\@part[#1]#2{\ifnum \c@secnumdepth >-2\relax
+        \refstepcounter{part}%
+        \addcontentsline{toc}{part}{\partname\
+        \thepart\thechapterend\hskip\betweenumberspace
+        #1}\else
+        \addcontentsline{toc}{part}{#1}\fi
+   \markboth{}{}%
+   {\raggedleft
+    \ifnum \c@secnumdepth >-2\relax
+      \normalfont\partsize\partname\ \thepart
+    \par
+    \vskip 103.3\p@ \fi
+    \partstyle
+    #2\par}\@endpart}%
+%
+\if@sechang
+   \def\sec@hangfrom#1{\setbox\@tempboxa\hbox{#1}%
+         \hangindent\wd\@tempboxa\noindent\box\@tempboxa}%
+   \def\chap@hangfrom#1{\setbox\@tempboxa\hbox{#1}%
+         \hangindent\wd\@tempboxa\noindent\box\@tempboxa}%
+\else
+   \def\sec@hangfrom#1{\setbox\@tempboxa\hbox{#1}%
+         \hangindent\z@\noindent\box\@tempboxa}%
+   \def\chap@hangfrom#1{\setbox\@tempboxa\hbox{#1}%
+         \hangindent\z@\noindent\box\@tempboxa}%
+\fi
+%
+\def\@makechapterhead#1{{\parindent\z@\raggedright\normalfont
+  \hyphenpenalty \@M
+  \interlinepenalty\@M
+  \chapsize\chapstyle
+  \chap@hangfrom{\thechapter\thechapterend\hskip\betweenumberspace}%!!!
+  \ignorespaces#1\par
+  \ifdim\pagetotal>107\p@
+     \vskip 11\p@
+  \else
+     \@tempdima=118\p@\advance\@tempdima by-\pagetotal
+     \vskip\@tempdima
+  \fi}}%
+%
+\def\@makeschapterhead#1{{\parindent \z@ \raggedright\normalfont
+  \hyphenpenalty \@M
+  \interlinepenalty\@M
+  \chapsize\chapstyle
+  \ignorespaces#1\par
+  \ifdim\pagetotal>107\p@
+     \vskip 11\p@
+  \else
+     \@tempdima=118\p@\advance\@tempdima by-\pagetotal
+     \vskip\@tempdima
+  \fi}}%
+%
+\let\labelitemi=\labelitemii
+\renewcommand\labelitemiii{\textbullet}%
+}
+%
+\AtEndOfClass{%
+\def\@maketitle{\newpage
+ \markboth{}{}%
+ \def\lastand{\ifnum\value{@inst}=2\relax
+                 \unskip{} \andname\
+              \else
+                 \unskip \lastandname\
+              \fi}%
+ \def\and{\stepcounter{@auth}\relax
+          \ifnum\value{@auth}=\value{@inst}%
+             \lastand
+          \else
+             \unskip,
+          \fi}%
+  \raggedright
+ {\Large \bfseries\boldmath
+  \pretolerance=10000
+  \if@numart
+     \let\@svsec\@empty
+  \else
+     \protected@edef\@svsec{\@seccntformat{chapter}\relax}%
+  \fi
+  \let\\=\newline
+% \@hangfrom{\@svsec}%
+  \@svsec
+  \interlinepenalty \@M
+  \@title \par}\vskip .8cm
+\if!\@subtitle!\else {\large \bfseries\boldmath
+  \vskip -.65cm
+  \pretolerance=10000
+  \@subtitle \par}\vskip .8cm\fi
+ \setbox0=\vbox{\setcounter{@auth}{1}\def\and{\stepcounter{@auth}}%
+ \def\thanks##1{}\@author}%
+ \global\value{@inst}=\value{@auth}%
+ \global\value{auco}=\value{@auth}%
+ \setcounter{@auth}{1}%
+{\lineskip .5em
+\noindent\ignorespaces
+\@author\vskip.35cm}
+ {\small\institutename\par}
+ \ifdim\pagetotal>107\p@
+     \vskip11\p@
+ \else
+     \@tempdima=118\p@\advance\@tempdima by-\pagetotal
+     \vskip\@tempdima
+ \fi
+}%
+}
+\endinput
+%%
+%% End of file `svmultphys.clo'.

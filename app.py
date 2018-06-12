@@ -110,6 +110,8 @@ def get_latex_macros(data):
     header = get_latex_header(data)
     macros = '\n'.join(re.compile(r'command{.*}').findall(header))
     macros = macros.replace('command', '\\providecommand')
+    macros = macros.replace('\\new\\provide', '\n\\provide')
+    macros = macros.replace('\\provide\\provide', '\n\\provide')
     #multiline def will be ignored
     defs = [k for k in re.compile(r'\\def.*').findall(header)
             if len(balanced_braces(k)) > 0]
@@ -409,10 +411,10 @@ class Document(object):
     @property
     def short_authors(self):
         """ Short authors """
-        if self._short_authors not in (None, '', 'None'):
-            return self._short_authors
         if isinstance(self.authors, basestring) or len(self.authors) < 5:
             return self.authors
+        if self._short_authors not in (None, '', 'None'):
+            return self._short_authors
         else:
             if any(name in self._authors[0] for name in self.highlight_authors):
                 authors = r'\hl{' + self._authors[0] + r'}, et al.'
@@ -908,7 +910,9 @@ class ArXivPaper(object):
             document._short_authors = self.short_authors
             document._authors = self.authors
             document._identifier = self.identifier
-            document.comment = self.comment
+            document.comment = None
+            if self.comment:
+                document.comment = self.comment.replace('\\ ', ' ')
             if self.appearedon in (None, '', 'None'):
                 document.date = self.date
             else:
