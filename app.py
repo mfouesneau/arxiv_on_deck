@@ -411,8 +411,10 @@ class Document(object):
     @property
     def short_authors(self):
         """ Short authors """
-        if isinstance(self.authors, basestring) or len(self.authors) < 5:
-            return self.authors
+        if isinstance(self.authors, basestring):
+            authors = self.authors.split(',')
+            if len(authors) < 5:
+                return self.authors
         if self._short_authors not in (None, '', 'None'):
             return self._short_authors
         else:
