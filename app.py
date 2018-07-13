@@ -700,7 +700,8 @@ class DocumentSource(Document):
             template = ExportPDFLatexTemplate()
 
         with open(self.outputname, 'w') as out:
-            out.write(template.apply_to_document(self))
+            data = template.apply_to_document(self)
+            out.write(data.encode('utf-8', 'surrogateescape').decode('utf-8', 'replace'))
 
         # compile source to get aux data if necessary
         compiler_command = "cd {0:s}; {1:s} {2:s} ".format(self.directory,
