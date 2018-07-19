@@ -713,12 +713,15 @@ class DocumentSource(Document):
         # get the references compiled
         input_aux = self.fname.replace('.tex', '.aux')
         output_aux = self.outputname.replace('.tex', '.aux')
-        with open(output_aux, 'w+') as fout:
-            with open(input_aux, 'r', errors="surrogateescape") as fin:
-                for line in fin:
-                    if (('cite' in line) or ('citation' in line) or
-                            ('label' in line) or ('toc' in line)):
-                        fout.write(line.encode('utf-8', 'surrogateescape').decode('utf-8', 'replace'))
+        try:
+            with open(output_aux, 'w+') as fout:
+                with open(input_aux, 'r', errors="surrogateescape") as fin:
+                    for line in fin:
+                        if (('cite' in line) or ('citation' in line) or
+                                ('label' in line) or ('toc' in line)):
+                            fout.write(line.encode('utf-8', 'surrogateescape').decode('utf-8', 'replace'))
+        except:
+            pass
 
         # compile output
         outputname = self.outputname.split('/')[-1]
