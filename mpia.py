@@ -5,7 +5,8 @@ A quick and dirty parser for ArXiv
 """
 import sys
 import traceback
-from app import (ExportPDFLatexTemplate, DocumentSource, raise_or_warn, __DEBUG__)
+from app import (ExportPDFLatexTemplate, DocumentSource, raise_or_warn,
+        color_print, __DEBUG__)
 import os
 import inspect
 #directories
@@ -122,7 +123,7 @@ def main(template=None):
     if sourcedir not in (None, ''):
         paper = DocumentSource(sourcedir)
         paper.identifier = sourcedir
-        keep = highlight_papers([paper], mitarbeiter)
+        keep, matched_authors = highlight_papers([paper], mitarbeiter)
         paper.compile(template=template)
         name = paper.outputname.replace('.tex', '.pdf').split('/')[-1]
         shutil.move(sourcedir + '/' + name, paper.identifier + '.pdf')
@@ -133,15 +134,17 @@ def main(template=None):
             papers = get_catchup_papers(skip_replacements=True)
         else:
             papers = get_new_papers(skip_replacements=True, appearedon=check_date(options.get('date')))
-        keep = filter_papers(papers, mitarbeiter)
+        keep, matched_authors = filter_papers(papers, mitarbeiter)
     else:
         papers = [ArXivPaper(identifier=identifier.split(':')[-1], appearedon=check_date(options.get('date')))]
-        keep = highlight_papers(papers, mitarbeiter)
+        keep, matched_authors = highlight_papers(paper, mitarbeiter)
 
     institute_words = ['Heidelberg', 'Max', 'Planck', '69117']
 
     # make sure no duplicated papers
     keep = {k.identifier: k for k in keep}.values()
+
+    issues = []
         
     for paper in keep:
         print(paper)
@@ -149,7 +152,7 @@ def main(template=None):
             paper.get_abstract()
             s = paper.retrieve_document_source('./tmp')
             institute_test = check_required_words(s, institute_words)
-            print("\n**** From Heidelberg: ", institute_test, '\n')
+            color_print("\n**** From Heidelberg: " + str(institute_test) + '\n', 'GREEN')
             # Filtering out bad matches
             if (not institute_test) and (not paper_request_test):
                 raise RuntimeError('Not an institute paper')
@@ -162,8 +165,18 @@ def main(template=None):
             else:
                 print("Not from HD... Skip.")
         except Exception as error:
+            issues.append((paper.identifier, ', '.join(paper.highlight_authors), str(error)))
             raise_or_warn(error, debug=__DEBUG__)
-        print("Generating postage")
+
+    print(""" Issues =============================== """)
+    for issue in issues:
+        color_print("[{0:s}] {1:s} \n {2:s}".format(*issue), 'red')
+
+    print(""" Matched Authors ====================== """)
+    for name, author, pid in matched_authors:
+        color_print("[{0:s}] {1:10s} {2:s}".format(pid, name, author), 'green')
+
+
 
 if __name__ == "__main__":
     main(template=MPIATemplate())
