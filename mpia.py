@@ -145,6 +145,7 @@ def main(template=None):
     keep = {k.identifier: k for k in keep}.values()
 
     issues = []
+    non_issues = []
         
     for paper in keep:
         print(paper)
@@ -164,6 +165,7 @@ def main(template=None):
                 print("PDF postage:", _identifier + '.pdf' )
             else:
                 print("Not from HD... Skip.")
+            non_issues.append((paper.identifier, ', '.join(paper.highlight_authors)))
         except Exception as error:
             issues.append((paper.identifier, ', '.join(paper.highlight_authors), str(error)))
             raise_or_warn(error, debug=__DEBUG__)
@@ -175,6 +177,10 @@ def main(template=None):
     print(""" Matched Authors ====================== """)
     for name, author, pid in matched_authors:
         color_print("[{0:s}] {1:10s} {2:s}".format(pid, name, author), 'green')
+
+    print(""" Compiled outputs ===================== """)
+    for issue in non_issues:
+        color_print("[{0:s}] {1:s}".format(*issue), 'cyan')
 
 
 
