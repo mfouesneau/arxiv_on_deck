@@ -137,7 +137,7 @@ def main(template=None):
         keep, matched_authors = filter_papers(papers, mitarbeiter)
     else:
         papers = [ArXivPaper(identifier=identifier.split(':')[-1], appearedon=check_date(options.get('date')))]
-        keep, matched_authors = highlight_papers(paper, mitarbeiter)
+        keep, matched_authors = highlight_papers(papers, mitarbeiter)
 
     institute_words = ['Heidelberg', 'Max', 'Planck', '69117']
 
