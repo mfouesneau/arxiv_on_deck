@@ -1,4 +1,5 @@
 #grep -wf MPIA_mitarbeiter.lst aph.html >> match
+#date "+%Y%m%d 3" >> stats.dat # 3 is the number of papers.
 Abreu
 Adler
 Ahmadi
@@ -50,8 +51,9 @@ Cantalloube
 CardenasVazquez
 Carone
 JoseChamorroVillar
+Ciceri
 Chauke
-Chira
+Chi
 Coronado
 Dedar
 MadelineDehen
@@ -65,7 +67,6 @@ Eberhardt
 Ebert
 Ehret
 Eilers
-El-Badry
 Enkler-Scharpegge
 Esser
 Eyheramendy
@@ -222,6 +223,7 @@ Potapov
 Pott
 Qian
 Quetz
+Rabus
 Radhakrishnan
 RicardoRamos
 Reichert
@@ -360,3 +362,11 @@ König
 Flock
 Xiang
 Pfeil
+Flores
+Bunjes
+Gieser
+Isbell
+Savvidou
+Bergez-Casalou
+Andika
+Mattia
