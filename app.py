@@ -374,9 +374,14 @@ def parse_command_multi(command, code, tokens=1):
     next_token: sequence or str
         found arguments
     """
-    safe = command.replace('\\', '')
+    if command == '\\fig':
+        safe = r'FIG'
+        code = code.replace(r'\fig{', r'\FIG{')
+    else:
+        safe = command.replace('\\', '')
     pieces = [code[r.start()-1:] for r in re.finditer(safe, code)]
-    return [parse_command(safe, pk, tokens=tokens) for pk in pieces]
+    ret = [parse_command(safe, pk, tokens=tokens) for pk in pieces]
+    return ret
 
 
 def get_latex_environment(envname, data, onlycontent=True):
@@ -431,7 +436,7 @@ class Figure(object):
 
     def _parse_subfigure(self):
         """ Parse the code for specific commands """
-        commands = 'caption', 'label', 'includegraphics', 'plotone'
+        commands = 'caption', 'label', 'includegraphics', 'plotone', '\\fig'
         info = {}
         # careful with subfigure...
         found = []
@@ -455,7 +460,7 @@ class Figure(object):
 
     def _parse(self):
         """ Parse the code for specific commands """
-        commands = 'caption', 'label', 'includegraphics', 'plotone'
+        commands = 'caption', 'label', 'includegraphics', 'plotone', '\\fig'
         info = {}
         # makes sure multiple includegraphics on the same line do work
         try:
@@ -490,6 +495,12 @@ class Figure(object):
         """ Associated data files """
         files = []
         attr = self.info.get('plotone')
+        if attr is not None:
+            if isinstance(attr, basestring):
+                files.append(attr)
+            else:
+                files.extend(attr)
+        attr = self.info.get(r'\fig')
         if attr is not None:
             if isinstance(attr, basestring):
                 files.append(attr)
