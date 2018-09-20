@@ -108,6 +108,7 @@ def main(template=None):
     hl_request_test = (hl_authors not in (None, 'None', '', 'none'))
     sourcedir = options.get('sourcedir', None)
     catchup_since = options.get('since', None)
+    select_main = options.get('select_main', False)
 
     __DEBUG__ = options.get('debug', False)
 
@@ -121,7 +122,7 @@ def main(template=None):
         mitarbeiter = [author.strip() for author in hl_authors.split(',')]
 
     if sourcedir not in (None, ''):
-        paper = DocumentSource(sourcedir)
+        paper = DocumentSource(sourcedir, autoselect=(not select_main))
         paper.identifier = sourcedir
         keep, matched_authors = highlight_papers([paper], mitarbeiter)
         paper.compile(template=template)

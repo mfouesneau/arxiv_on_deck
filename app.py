@@ -540,6 +540,7 @@ class Document(object):
     """ Latex Document structure """
 
     def __init__(self, data):
+        self._data = data
         self._code = self._clean_latex_comments(data)
         self._header = get_latex_header(self._code)
         self._body = get_latex_body(self._code)
@@ -576,9 +577,10 @@ class Document(object):
     def arxivertag(self):
         """ check for arxiver tag selecting figures """
         tags = None
-        if r"%@arxiver" in self._code:
-            start, end = list(re.compile(r'@arxiver{.*}').finditer(self._code))[0].span()
-            tags = balanced_braces(self._code[start:end])[0]
+        if r"%@arxiver" in self._data:
+            start, end = list(re.compile(r'@arxiver{.*}').finditer(self._data))[0].span()
+            tags = balanced_braces(self._data[start:end])[0]
+            color_print('*** arxiver figure tag', 'green')
         return tags
 
     @property
@@ -768,7 +770,7 @@ class ExportPDFLatexTemplate(object):
         try:
             if document.arxivertag:
                 selected = {fig.files[0]:fig for fig in document.figures if fig.files[0] in document.arxivertag}
-                return [selected[fname] for fname in document.arxivertag.replace(',', '').split()]   ## Keep the same ordering
+                return [selected[fname] for fname in document.arxivertag.replace(',', ' ').split()]   ## Keep the same ordering
         except Exception as e:
             raise_or_warn(e)
 
@@ -811,9 +813,12 @@ class ExportPDFLatexTemplate(object):
 class DocumentSource(Document):
     """ Source code class """
 
-    def __init__(self, directory):
+    def __init__(self, directory, autoselect=True):
         fnames = glob(directory + '/*.tex')
-        fname = self._auto_select_main_doc(fnames)
+        if autoselect:
+            fname = self._auto_select_main_doc(fnames)
+        else:
+            fname = self._manual_select_main_doc(fnames)
 
         with open(fname, 'r', errors="surrogateescape") as finput:
             data = self._expand_auxilary_files(finput.read(),
@@ -872,10 +877,14 @@ class DocumentSource(Document):
             return selected[1]
         else:
             print('Could not locate the main document automatically. Little help please!')
-            for e, fname in enumerate(fnames):
-                print(e, fname)
-            select = input("which file is the main document? ")
-            return fnames[int(select)]
+            return self._manual_select_main_doc(fnames)
+
+    def _manual_select_main_doc(self, fnames):
+        """ Manual selection of the file that is the main tex document """
+        for e, fname in enumerate(fnames):
+            print(e, fname)
+        select = input("which file is the main document? ")
+        return fnames[int(select)]
 
     def __repr__(self):
         return '''Paper in {0:s}, \n\t{1:s}'''.format(self.fname,
@@ -1078,7 +1087,7 @@ class ArXivPaper(object):
         txt = """[{s.identifier:s}]: {s.title:s}\n\t{s.authors:s}"""
         return txt.format(s=self)
 
-    def retrieve_document_source(self, directory=None):
+    def retrieve_document_source(self, directory=None, autoselect=True):
         where = ArXivPaper.source.format(identifier=self.identifier.split(':')[-1])
         tar = tarfile.open(mode='r|gz', fileobj=urlopen(where))
         if directory is None:
@@ -1088,7 +1097,7 @@ class ArXivPaper(object):
                 shutil.rmtree(directory)
             print("extracting tarball...")
             tar.extractall(directory)
-            document = DocumentSource(directory)
+            document = DocumentSource(directory, autoselect=autoselect)
             self.get_abstract()
             try:
                 document.authors
@@ -1310,6 +1319,7 @@ def running_options():
             ('-a', '--authors', dict(dest="hl_authors", help="Highlight specific authors", default='None', type='str')),
             ('-d', '--date', dict(dest="date", help="Impose date on the printouts (e.g., today)", default='', type='str')),
             ('-c', '--catchup', dict(dest="since", help="Catchup arxiv from given date (e.g., today, 03/01/2018)", default='', type='str')),
+            ('--selectfile', dict(dest="select_main", default=False, action="store_true", help="Set to select the main tex file manually")),
             ('--debug', dict(dest="debug", default=False, action="store_true", help="Set to raise exceptions on errors")),
         )
 
@@ -1341,11 +1351,13 @@ def main(template=None):
     identifier = options.get('identifier', None)
     sourcedir = options.get('sourcedir', None)
     catchup_since = options.get('since', None)
+    select_main = options.get('select_main', False)
 
     mitarbeiter_list = options.get('mitarbeiter', './mitarbeiter.txt')
     mitarbeiter = get_mitarbeiter(mitarbeiter_list)
+
     if sourcedir not in (None, ''):
-        paper = DocumentSource(sourcedir)
+        paper = DocumentSource(sourcedir, autoselect=(not select_main))
         paper.identifier = sourcedir
         keep, _ = highlight_papers([paper], mitarbeiter)
         paper.compile(template=template)
