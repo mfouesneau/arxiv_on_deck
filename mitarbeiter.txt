@@ -57,7 +57,6 @@ Chi
 Coronado
 Dedar
 MadelineDehen
-HunorDetre
 Douffet
 Drescher
 Düe
@@ -166,6 +165,7 @@ Lovell
 Ludwig
 Maire
 Mall
+Macci
 Mancini
 Manger
 Martin
@@ -269,7 +269,6 @@ Sorini
 Stadler
 Stadter
 Staude
-Stern
 Süveges
 Sueveges
 Syed
@@ -370,3 +369,4 @@ Savvidou
 Bergez-Casalou
 Andika
 Mattia
+Smirnova-Pinchukova
