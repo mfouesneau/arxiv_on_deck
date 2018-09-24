@@ -594,7 +594,8 @@ class Document(object):
     def authors(self):
         """ Document authors """
         if self._authors in (None, '', 'None'):
-            self._authors = parse_command('author', self._code)
+            # self._authors = parse_command('author', self._code)
+            self._authors = parse_command_multi('author', self._code)
         return self._authors
 
     @property
@@ -614,6 +615,7 @@ class Document(object):
         if self.highlight_authors:
             incl_authors = []
             for name in self.highlight_authors:
+                print(name)
                 if name != self._authors[0]:
                     incl_authors.append(r'\hl{' + name + r'}')
             authors += '; incl. ' + ', '.join(incl_authors)
