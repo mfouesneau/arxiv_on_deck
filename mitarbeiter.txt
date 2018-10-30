@@ -36,6 +36,7 @@ Boekel
 Boehm
 Böhm
 Borelli
+Davies
 Deen
 denBosch
 Bosco
@@ -92,6 +93,7 @@ Grözinger
 Gutcke
 Heitz
 Henning
+Hennawi
 Herbst
 Herpich
 Hiller
