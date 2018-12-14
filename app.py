@@ -268,6 +268,37 @@ def color_print(*args, **kwargs):
         write(end)
 
 
+def tex_escape(text):
+    """ Escape latex special characters in one string
+    
+        Parameters
+        ----------
+        text: str
+            a plain text message
+
+        return
+        ------
+        newtext: str
+            the message escaped to appear correctly in LaTeX
+    """
+    conv = {
+        '&': r'\&',
+        '%': r'\%',
+        '$': r'\$',
+        '#': r'\#',
+        '_': r'\_',
+        '{': r'\{',
+        '}': r'\}',
+        '~': r'\textasciitilde{}',
+        '^': r'\^{}',
+        '\\': r'\textbackslash{}',
+        '<': r'\textless{}',
+        '>': r'\textgreater{}',
+    }
+    regex = re.compile('|'.join(re.escape(key) for key in sorted(conv.keys(), key = lambda item: - len(item))))
+    return regex.sub(lambda match: conv[match.group()], text)
+
+
 def get_latex_body(data):
     """ Extract document body text """
     start = re.compile(r'begin{document}').search(data).span()[1]
@@ -344,14 +375,20 @@ def parse_command(command, code, tokens=1):
     """
     safe = command.replace('\\', '')
     options = re.findall(safe + '\s*\[.*\]', code)
-    where = list(re.compile(r'\\' + safe).finditer(code))[0].span()[1]
-    if options:  # empty sequences are False
-        opt = options[0]
-        code = code.replace(opt.replace(command, ''), '')
-    next_token = balanced_braces(code[where:])[:tokens]
-    if tokens == 1:
-        return next_token[0]
-    return next_token
+    try:
+        where = list(re.compile(r'\\' + safe).finditer(code))[0].span()[1]
+        if options:  # empty sequences are False
+            opt = options[0]
+            code = code.replace(opt.replace(command, ''), '')
+        next_token = balanced_braces(code[where:])[:tokens]
+        if tokens == 1:
+            return next_token[0]
+        return next_token
+    except Exception as e:
+        print("parse_command({0:s}, code, tokens={1:d}) error".format(command,
+            tokens))
+        print(e)
+        raise e
 
 
 def parse_command_multi(command, code, tokens=1):
@@ -974,7 +1011,9 @@ class ArxivAbstractHTMLParser(HTMLParser):
         if self._abstract_tag:
             self.abstract = data.strip()
         if self._comment_tag:
-            self.comment = re.escape(data.strip())
+            # self.comment = re.escape(data.strip())
+            self.comment = tex_escape(data.strip())
+            # self.comment = data.strip()
             self._comment_tag = False
         if 'Submitted on' in data:
             self.date = data.strip()
