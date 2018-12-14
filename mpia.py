@@ -44,8 +44,11 @@ class MPIATemplate(ExportPDFLatexTemplate):
         """ How to include the figures """
         fig = ""
         for fname in figure.files:
+            # as latex parses these lines first, one must prevent latex to find
+            # dots in figure filenames apart from the extension 
+            rootname, extension = '.'.join(fname.split('.')[:-1]), fname.split('.')[-1]
             fig += r"    \includegraphics[width=\maxwidth, height=\maxheight,keepaspectratio]{"
-            fig += fname + r"}\\" + "\n"
+            fig += r"{" + rootname + r"}." + extension + r"}\\" + "\n"
         if len(figure.files) > 1:
             fig = fig.replace(r'\maxwidth', '{0:0.1f}'.format(0.9 * 1. / len(figure.files)) + r'\maxwidth')
         caption = r"""    \caption{Fig. """ + str(figure._number) + """: """ + str(figure.caption) + r"""}"""
