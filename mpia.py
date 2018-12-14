@@ -160,7 +160,8 @@ def main(template=None):
             color_print("\n**** From Heidelberg: " + str(institute_test) + '\n', 'GREEN')
             # Filtering out bad matches
             if (not institute_test) and (not paper_request_test):
-                raise RuntimeError('Not an institute paper')
+                raise RuntimeError('Not an institute paper -- ' +
+                        check_required_words(s, institute_words, verbose=True))
             if (paper_request_test or institute_test):
                 s.compile(template=template)
                 _identifier = paper.identifier.split(':')[-1]

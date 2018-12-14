@@ -1298,7 +1298,7 @@ def filter_papers(papers, fname_list):
     return keep, matched_authors
 
 
-def check_required_words(source, word_list=[]):
+def check_required_words(source, word_list=[], verbose=False):
     """ Check the paper for words required for processing
 
     Test is case insensitive but all words must appear
@@ -1308,6 +1308,8 @@ def check_required_words(source, word_list=[]):
         if (word in source._code) or (word.lower() in source._code):
             check = check and True
         else:
+            if verbose:
+                return ("'{0:s}' keyword not found.".format(word))
             return False
     return check
 
