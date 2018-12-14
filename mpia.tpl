@@ -291,7 +291,7 @@
 % Authors
 \textbf{\large{<AUTHORS>}}
 
-\hl{<DATE>} -- <COMMENTS>
+\hl{<DATE>} -- {\protect{<COMMENTS>}}
 
 \vspace{1em}
 
