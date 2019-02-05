@@ -190,7 +190,8 @@ Möller-Nilsson
 Moellers
 Möllers
 Molliere
-Moreno-Ventas
+Moreno
+Ventas
 Mottram
 Mueller
 Müller
@@ -279,7 +280,6 @@ Tsatsi
 Wel
 Houdt
 Vasilyev
-Ven
 Venemans
 Voss
 Vourellis
@@ -385,3 +385,5 @@ Olofsson
 Banados
 Maxton
 Onoue
+Sawczuck
+Biancalani
