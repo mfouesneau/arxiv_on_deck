@@ -171,6 +171,7 @@ Macci
 Mancini
 Manger
 Martin
+Martin-Navarro
 Mastrobuono-Battisti
 Mathar
 Maurer
@@ -271,7 +272,6 @@ Sliwa
 Soler
 Sorini
 Stadler
-Stadter
 Staude
 Süveges
 Sueveges
