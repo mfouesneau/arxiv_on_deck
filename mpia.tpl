@@ -26,7 +26,7 @@
 \usepackage{xspace} 
 % \usepackage{fontspec}
 \usepackage{../deprecated_tex/astrojournals}
-
+\usepackage[Symbol]{upgreek}
 
 % Making fitbox environment ----------------------------------------------------
 % scales the fontsize of text to fit into a specified box
@@ -265,15 +265,11 @@
 \providecommand{\ga}{\gtrsim}
 
 
-\providecommand\ion[2]{#1$\;${%
-\ifx\@currsize\normalsize\small \else
-\ifx\@currsize\small\footnotesize \else
-\ifx\@currsize\footnotesize\scriptsize \else
-\ifx\@currsize\scriptsize\tiny \else
-\ifx\@currsize\large\normalsize \else
-\ifx\@currsize\Large\large
-\fi\fi\fi\fi\fi\fi
-\rmfamily\@Roman{#2}}\relax}% 
+\DeclareRobustCommand{\ion}[2]{\textup{#1\,\textsc{\lowercase{#2}}}}
+\newcommand*\element[1][]{%
+  \def\aa@element@tr{#1}%
+  \aa@element
+}
 
 %Document found macros ------------------------------------------------------
 <MACROS>
