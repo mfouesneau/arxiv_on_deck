@@ -5,7 +5,7 @@ A quick and dirty parser for ArXiv
 """
 import sys
 import traceback
-from app import (ExportPDFLatexTemplate, DocumentSource, raise_or_warn,
+from app import (ExportPDFLatexTemplate, DocumentSource, raise_or_warn,\
         color_print, __DEBUG__)
 import os
 import inspect
@@ -21,8 +21,8 @@ class MPIATemplate(ExportPDFLatexTemplate):
     template = open('./mpia.tpl', 'r').read()
 
     # Include often missing libraries
-    compiler = r"TEXINPUTS='{0:s}/deprecated_tex:' pdflatex".format(__ROOT__)
-    compiler_options = r"-enable-write18 -shell-escape -interaction=nonstopmode"
+    compiler = r"TEXINPUTS='{0:s}/deprecated_tex:' pdflatex ".format(__ROOT__)
+    compiler_options = r" -enable-write18 -shell-escape -interaction=nonstopmode "
 
     def short_authors(self, document):
         """ How to return short version of author list 
