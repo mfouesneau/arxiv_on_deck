@@ -41,6 +41,13 @@ else:
 
 __DEBUG__ = False
 
+def make_qrcode(identifier):
+    import qrcode
+    qr = qrcode.QRCode(border=0)
+    qr.add_data('https://www.arxiv.org/abs/{:s}'.format(identifier))
+    qr.make(fit=True)
+    img = qr.make_image(fill_color="black", back_color="white")
+    img.save(__ROOT__ + '/tmp/qrcode.pdf',format='pdf')
 
 def raise_or_warn(exception, limit=5, file=sys.stdout, debug=False):
     """ Raise of warn for exceptions. This helps debugging """
@@ -749,6 +756,13 @@ class ExportPDFLatexTemplate(object):
 \usepackage[nolist,nohyperlinks,printonlyused]{acronym}
 \usepackage[breaklinks,colorlinks,citecolor=blue,unicode]{hyperref}
 \usepackage{siunitx}
+\usepackage[Symbol]{upgreek}
+
+\DeclareRobustCommand{\ion}[2]{\textup{#1\,\textsc{\lowercase{#2}}}}
+\newcommand*\element[1][]{%
+  \def\aa@element@tr{#1}%
+  \aa@element
+}
 
 %convert files on the fly to pdflatex compilation
 \DeclareGraphicsExtensions{.jpg, .ps, .eps, .png, .pdf}
@@ -797,8 +811,8 @@ class ExportPDFLatexTemplate(object):
 \end{document}
 """
 
-    compiler = r"TEXINPUTS='{0:s}/deprecated_tex:' pdflatex".format(__ROOT__)
-    compiler_options = r"-enable-write18 -shell-escape -interaction=nonstopmode"
+    compiler = r"TEXINPUTS='{0:s}/deprecated_tex:' pdflatex ".format(__ROOT__)
+    compiler_options = r" -enable-write18 -shell-escape -interaction=nonstopmode "
 
     def short_authors(self, document):
         """ Short author """
@@ -1243,7 +1257,6 @@ def get_catchup_papers(since=None, skip_replacements=False, appearedon=None):
     papers = parser.papers
     return papers
 
-
 def get_mitarbeiter(source='./mitarbeiter.txt'):
     """ returns the list of authors of interests.
     Needed to parse the input list to get initials and last name.
@@ -1255,7 +1268,7 @@ def get_mitarbeiter(source='./mitarbeiter.txt'):
     mitarbeiter: list(str)
        authors to look for
     """
-    with open(source) as fin:
+    with open(source, errors="surrogateescape") as fin:
         mitarbeiter = []
         for name in fin:
             if name[0] != '#':   # Comment line
@@ -1387,7 +1400,6 @@ def check_date(datestr):
         return None
     else:
         return datestr
-
 
 def main(template=None):
     options = running_options()

@@ -8,6 +8,7 @@
 \usepackage[a4paper,margin=.5cm]{geometry}
 \usepackage[english]{babel}
 \usepackage{natbib}
+\usepackage{wrapfig}
 \usepackage{graphicx}
 \usepackage{txfonts}
 \usepackage{xcolor}
@@ -293,7 +294,15 @@
 
 % Abstract
 \begin{fitbox}{2\Widthtempl}{0.2\Highttempl}
-	\abstract{ <ABSTRACT> }
+	\abstract{ 
+                \begin{wrapfigure}{r}{0.07\textwidth}
+                \vspace{-.4cm}
+                \hspace{-.3cm}
+                \includegraphics[width=0.07\textwidth]{qrcode.pdf}
+                \vspace{-.5cm}
+                \end{wrapfigure}
+                <ABSTRACT> 
+             }
 \end{fitbox}
 
 % defined automatically

@@ -1,3 +1,4 @@
+#!/Users/georgiev/Installs/miniconda3/bin/python
 """
 A quick and dirty parser for ArXiv
 ===================================
@@ -12,13 +13,16 @@ import inspect
 #directories
 __ROOT__ = '/'.join(os.path.abspath(inspect.getfile(inspect.currentframe())).split('/')[:-1])
 
+# Cron jobs need absolute file paths
+
+mpia_tpl = __ROOT__ + '/mpia.tpl'
 
 class MPIATemplate(ExportPDFLatexTemplate):
     """ Template used at MPIA 
     which shows 3 figures and adapt the layout depending of figure aspect ratios
     """
 
-    template = open('./mpia.tpl', 'r').read()
+    template = open(mpia_tpl, 'r').read()
 
     # Include often missing libraries
     compiler = r"TEXINPUTS='{0:s}/deprecated_tex:' pdflatex ".format(__ROOT__)
@@ -103,7 +107,8 @@ def main(template=None):
     """ Main function """
     from app import (get_mitarbeiter, filter_papers, ArXivPaper,
                      highlight_papers, running_options, get_new_papers,
-                     shutil, get_catchup_papers, check_required_words, check_date)
+                     shutil, get_catchup_papers, check_required_words, check_date,
+                     make_qrcode)
     options = running_options()
     identifier = options.get('identifier', None)
     paper_request_test = (identifier not in (None, 'None', '', 'none'))
@@ -119,7 +124,7 @@ def main(template=None):
         print('Debug mode on')
 
     if not hl_request_test:
-        mitarbeiter_list = options.get('mitarbeiter', './mitarbeiter.txt')
+        mitarbeiter_list = options.get('mitarbeiter', __ROOT__ + '/mitarbeiter.txt')
         mitarbeiter = get_mitarbeiter(mitarbeiter_list)
     else:
         mitarbeiter = [author.strip() for author in hl_authors.split(',')]
@@ -147,7 +152,7 @@ def main(template=None):
 
     # make sure no duplicated papers
     keep = {k.identifier: k for k in keep}.values()
-
+    
     issues = []
     non_issues = []
         
@@ -155,7 +160,7 @@ def main(template=None):
         print(paper)
         try:
             paper.get_abstract()
-            s = paper.retrieve_document_source('./tmp')
+            s = paper.retrieve_document_source(__ROOT__ + '/tmp/')
             institute_test = check_required_words(s, institute_words)
             color_print("\n**** From Heidelberg: " + str(institute_test) + '\n', 'GREEN')
             # Filtering out bad matches
@@ -163,10 +168,14 @@ def main(template=None):
                 raise RuntimeError('Not an institute paper -- ' +
                         check_required_words(s, institute_words, verbose=True))
             if (paper_request_test or institute_test):
+
+                # Generate a QR Code
+                make_qrcode(identifier)
+
                 s.compile(template=template)
                 _identifier = paper.identifier.split(':')[-1]
                 name = s.outputname.replace('.tex', '.pdf').split('/')[-1]
-                shutil.move('./tmp/' + name, _identifier + '.pdf')
+                shutil.move(__ROOT__ + '/tmp/' + name, _identifier + '.pdf')
                 print("PDF postage:", _identifier + '.pdf' )
             else:
                 print("Not from HD... Skip.")
@@ -186,7 +195,6 @@ def main(template=None):
     print(""" Compiled outputs ===================== """)
     for issue in non_issues:
         color_print("[{0:s}] {1:s}".format(*issue), 'cyan')
-
 
 
 if __name__ == "__main__":
