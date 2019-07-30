@@ -51,4 +51,4 @@ or selects the most references figures throughout the text.
 ## Contributors
 
 * Morgan Fouesneau (@mfouesneau)
-* Iskren I. Georviev (@iskreng-y-g)
+* Iskren I. Georviev (@iskren-y-g)
