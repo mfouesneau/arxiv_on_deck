@@ -295,12 +295,14 @@
 % Abstract
 \begin{fitbox}{2\Widthtempl}{0.2\Highttempl}
 	\abstract{ 
+
                 \begin{wrapfigure}{r}{0.07\textwidth}
                 \vspace{-.4cm}
                 \hspace{-.3cm}
                 \includegraphics[width=0.07\textwidth]{qrcode.pdf}
                 \vspace{-.5cm}
                 \end{wrapfigure}
+
                 <ABSTRACT> 
              }
 \end{fitbox}

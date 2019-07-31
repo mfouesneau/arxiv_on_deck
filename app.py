@@ -21,6 +21,8 @@ import locale
 import codecs
 
 import inspect
+import qrcode
+
 #directories
 __ROOT__ = '/'.join(os.path.abspath(inspect.getfile(inspect.currentframe())).split('/')[:-1])
 
