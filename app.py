@@ -44,7 +44,6 @@ else:
 __DEBUG__ = False
 
 def make_qrcode(identifier):
-    import qrcode
     qr = qrcode.QRCode(border=0)
     qr.add_data('https://www.arxiv.org/abs/{:s}'.format(identifier))
     qr.make(fit=True)
