@@ -540,9 +540,12 @@ class Figure(object):
         """ Associated data files """
         files = []
         attr = self.info.get('plotone')
+        def remove_specials(string):
+            return string.replace('{', '').replace('}', '')
+
         if attr is not None:
             if isinstance(attr, basestring):
-                files.append(attr)
+                files.append(remove_specials(attr))
             else:
                 files.extend(attr)
         attr = self.info.get(r'\fig')
@@ -554,7 +557,7 @@ class Figure(object):
         attr = self.info.get('includegraphics')
         if attr is not None:
             if isinstance(attr, basestring):
-                files.append(attr)
+                files.append(remove_specials(attr))
             else:
                 files.extend(attr)
         for k in 'plottwo', 'subfigures':
@@ -875,17 +878,54 @@ class DocumentSource(Document):
             fname = self._manual_select_main_doc(fnames)
 
         with open(fname, 'r', errors="surrogateescape") as finput:
-            data = self._expand_auxilary_files(finput.read(),
-                    directory=directory)
+            data = finput.read()
+            for input_command in ['input', 'include']:
+                data = self._expand_auxilary_files(data, directory=directory,
+                        command=input_command)
+            data = self._parse_of_import_package(data, directory=directory)
 
         Document.__init__(self, data)
         self.fname = fname
         self.directory = directory
         self.outputname = self.fname[:-len('.tex')] + '_cleaned.tex'
 
-    def _expand_auxilary_files(self, data, directory=''):
+    def _parse_of_import_package(self, data, directory=''):
+        if not r'usepackage{import}' in data:
+            return data
+        command = 'import'
+        inputs = list(re.compile(r'\\{0:s}.*'.format(command)).finditer(data))
+        if len(directory):
+            if directory[-1] != '/':
+                directory = directory + '/'
+        if len(inputs) > 0:
+            print('*** Found document inclusions using import ')
+            new_data = []
+            prev_start, prev_end = 0, 0
+            for match in inputs:
+                try:
+                    fname = match.group().replace(r'\import', '').strip()
+                    fname = fname.replace('{', '').replace('}', '').replace('.tex', '')   # just in case
+                    print('      input command: ', fname)
+                    try:
+                        with open(directory + fname + '.tex', 'r', errors="surrogateescape") as fauxilary:
+                            auxilary = fauxilary.read()
+                    except:
+                        with open(directory + fname, 'r', errors="surrogateescape") as fauxilary:
+                            auxilary = fauxilary.read()
+                    start, end = match.span()
+                    new_data.append(data[prev_end:start])
+                    new_data.append('\n%input from {0:s}\n'.format(fname) + auxilary + '\n')
+                    prev_start, prev_end = start, end
+                except Exception as e:
+                    raise_or_warn(e)
+            new_data.append(data[prev_end:])
+            return '\n'.join(new_data)
+        else:
+            return data
+
+    def _expand_auxilary_files(self, data, directory='', command='input'):
         # inputs
-        inputs = list(re.compile(r'\\input.*').finditer(data))
+        inputs = list(re.compile(r'\\{0:s}.*'.format(command)).finditer(data))
         if len(directory):
             if directory[-1] != '/':
                 directory = directory + '/'
@@ -895,7 +935,7 @@ class DocumentSource(Document):
             prev_start, prev_end = 0, 0
             for match in inputs:
                 try:
-                    fname = match.group().replace(r'\input', '').strip()
+                    fname = match.group().replace(r'\\' + command, '').strip()
                     fname = fname.replace('{', '').replace('}', '').replace('.tex', '')   # just in case
                     print('      input command: ', fname)
                     with open(directory + fname + '.tex', 'r', errors="surrogateescape") as fauxilary:
@@ -1258,6 +1298,7 @@ def get_catchup_papers(since=None, skip_replacements=False, appearedon=None):
     papers = parser.papers
     return papers
 
+
 def get_mitarbeiter(source='./mitarbeiter.txt'):
     """ returns the list of authors of interests.
     Needed to parse the input list to get initials and last name.
@@ -1401,6 +1442,7 @@ def check_date(datestr):
         return None
     else:
         return datestr
+
 
 def main(template=None):
     options = running_options()
