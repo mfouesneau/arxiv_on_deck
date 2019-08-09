@@ -163,17 +163,15 @@ def main(template=None):
             s = paper.retrieve_document_source(__ROOT__ + '/tmp/')
             institute_test = check_required_words(s, institute_words)
             color_print("\n**** From Heidelberg: " + str(institute_test) + '\n', 'GREEN')
+            _identifier = paper.identifier.split(':')[-1]
             # Filtering out bad matches
             if (not institute_test) and (not paper_request_test):
                 raise RuntimeError('Not an institute paper -- ' +
                         check_required_words(s, institute_words, verbose=True))
             if (paper_request_test or institute_test):
-
-                # Generate a QR Code
-                make_qrcode(identifier)
-
+                make_qrcode(_identifier)
                 s.compile(template=template)
-                _identifier = paper.identifier.split(':')[-1]
+                # Generate a QR Code
                 name = s.outputname.replace('.tex', '.pdf').split('/')[-1]
                 shutil.move(__ROOT__ + '/tmp/' + name, _identifier + '.pdf')
                 print("PDF postage:", _identifier + '.pdf' )
