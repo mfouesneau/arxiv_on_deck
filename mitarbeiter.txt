@@ -44,7 +44,6 @@ Brandner
 Briegel
 Brill
 Brümmer
-Buck
 Buder
 Butler
 Cantalloube
@@ -68,6 +67,7 @@ Eilers
 Enkler-Scharpegge
 Esser
 Eyheramendy
+Farina
 Feldt
 Fendt
 Feuillet
