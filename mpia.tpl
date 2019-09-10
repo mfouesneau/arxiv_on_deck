@@ -296,11 +296,11 @@
 \begin{fitbox}{2\Widthtempl}{0.2\Highttempl}
 	\abstract{ 
 
-                \begin{wrapfigure}{r}{0.07\textwidth}
+                \begin{wrapfigure}{r}{0.1\textwidth}
                 \vspace{-.4cm}
-                \hspace{-.3cm}
-                \includegraphics[width=0.07\textwidth]{qrcode.pdf}
-                \vspace{-.5cm}
+                \hspace{-.2cm}
+                \includegraphics[width=0.1\textwidth]{qrcode.pdf}
+                \vspace{-.55cm}
                 \end{wrapfigure}
 
                 <ABSTRACT> 
