@@ -300,7 +300,7 @@
                 \vspace{-.4cm}
                 \hspace{-.2cm}
                 \includegraphics[width=0.1\textwidth]{qrcode.pdf}
-                \vspace{-.55cm}
+                \vspace{-.5cm}
                 \end{wrapfigure}
 
                 <ABSTRACT> 
