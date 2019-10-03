@@ -923,7 +923,7 @@ class DocumentSource(Document):
         else:
             return data
 
-    def _expand_auxilary_files(self, data, directory='', command='input'):
+    def _expand_auxilary_files(self, data, directory= '', command='input'):
         # inputs
         inputs = list(re.compile(r'\\{0:s}.*'.format(command)).finditer(data))
         if len(directory):
@@ -936,7 +936,7 @@ class DocumentSource(Document):
             for match in inputs:
                 try:
                     fname = match.group().replace(r'\\' + command, '').strip()
-                    fname = fname.replace('{', '').replace('}', '').replace('.tex', '')   # just in case
+                    #fname = fname.replace('{', '').replace('}', '').replace('.tex', '')   # just in case
                     print('      input command: ', fname)
                     with open(directory + fname + '.tex', 'r', errors="surrogateescape") as fauxilary:
                         auxilary = fauxilary.read()
