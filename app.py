@@ -44,7 +44,7 @@ else:
 __DEBUG__ = False
 
 def make_qrcode(identifier):
-    qr = qrcode.QRCode(border=0)
+    qr = qrcode.QRCode(border=0, error_correction=qrcode.constants.ERROR_CORRECT_H)
     qr.add_data('https://www.arxiv.org/abs/{:s}'.format(identifier))
     qr.make(fit=True)
     img = qr.make_image(fill_color="black", back_color="white")
@@ -1232,11 +1232,11 @@ class ArXivPaper(object):
     def make_postage(self, template=None):
         print("Generating postage")
         self.get_abstract()
-        s = self.retrieve_document_source('./tmp')
+        s = self.retrieve_document_source(__ROOT__ + '/tmp')
         s.compile(template=template)
         identifier = self.identifier.split(':')[-1]
         name = s.outputname.replace('.tex', '.pdf').split('/')[-1]
-        shutil.move('./tmp/' + name, identifier + '.pdf')
+        shutil.move(__ROOT__ + '/tmp/' + name, identifier + '.pdf')
         print("PDF postage:", identifier + '.pdf' )
 
 
