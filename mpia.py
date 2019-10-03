@@ -173,7 +173,7 @@ def main(template=None):
                 s.compile(template=template)
                 # Generate a QR Code
                 name = s.outputname.replace('.tex', '.pdf').split('/')[-1]
-                shutil.move(__ROOT__ + '/tmp/' + name, _identifier + '.pdf', __ROOT__)
+                shutil.move(__ROOT__ + '/tmp/' + name, __ROOT__ + _identifier + '.pdf')
                 print("PDF postage:", _identifier + '.pdf' )
             else:
                 print("Not from HD... Skip.")
