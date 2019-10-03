@@ -879,9 +879,9 @@ class DocumentSource(Document):
 
         with open(fname, 'r', errors="surrogateescape") as finput:
             data = finput.read()
-            for input_command in ['input']:
-                data = self._expand_auxilary_files(data, directory=directory,
-                        command=input_command)
+#            for input_command in ['input', 'include']:
+                #data = self._expand_auxilary_files(data, directory=directory,
+                #        command=input_command)
             data = self._parse_of_import_package(data, directory=directory)
 
         Document.__init__(self, data)
