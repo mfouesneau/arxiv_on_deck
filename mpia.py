@@ -4,7 +4,7 @@ A quick and dirty parser for ArXiv
 ===================================
 
 """
-import sys
+import sys,time
 import traceback
 from app import (ExportPDFLatexTemplate, DocumentSource, raise_or_warn,\
         color_print, __DEBUG__)
@@ -169,11 +169,12 @@ def main(template=None):
                 raise RuntimeError('Not an institute paper -- ' +
                         check_required_words(s, institute_words, verbose=True))
             if (paper_request_test or institute_test):
+                # Generate a QR Code
                 make_qrcode(_identifier)
                 s.compile(template=template)
-                # Generate a QR Code
                 name = s.outputname.replace('.tex', '.pdf').split('/')[-1]
                 destination = __ROOT__ + '/' + _identifier + '.pdf'
+                time.sleep(2)
                 shutil.move(__ROOT__ + '/tmp/' + name, destination)
                 print("PDF postage:", _identifier + '.pdf' )
             else:
