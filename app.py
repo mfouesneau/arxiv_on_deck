@@ -338,6 +338,7 @@ def get_latex_macros(data):
     macros += '\n'.join(defs)
     print('*** Found macros and definitions in the header: ')
     print(macros)
+    input('inspect macros')
     return macros
 
 
@@ -879,9 +880,10 @@ class DocumentSource(Document):
 
         with open(fname, 'r', errors="surrogateescape") as finput:
             data = finput.read()
-#            for input_command in ['input', 'include']:
-                #data = self._expand_auxilary_files(data, directory=directory,
-                #        command=input_command)
+            if '\input' and '.tex' in data:
+                for input_command in ['input', 'include']:
+                    data = self._expand_auxilary_files(data, directory=directory,
+                            command=input_command)
             data = self._parse_of_import_package(data, directory=directory)
 
         Document.__init__(self, data)
