@@ -1299,7 +1299,7 @@ def get_catchup_papers(since=None, skip_replacements=False, appearedon=None):
     return papers
 
 
-def get_mitarbeiter(source='./mitarbeiter.txt'):
+def get_mitarbeiter(source=__ROOT__+'/mitarbeiter.txt'):
     """ returns the list of authors of interests.
     Needed to parse the input list to get initials and last name.
     This may not work all the time. The best would be to have the proper names
@@ -1412,7 +1412,7 @@ def running_options():
 
     opts = (
             ('-s', '--source', dict(dest="sourcedir", help="Use an existing source directory", default='', type='str')),
-            ('-m', '--mitarbeiter', dict(dest="hl_authors", help="List of authors to highlight (co-workers)", default='./mitarbeiter.txt', type='str')),
+            ('-m', '--mitarbeiter', dict(dest="hl_authors", help="List of authors to highlight (co-workers)", default=__ROOT__+'/mitarbeiter.txt', type='str')),
             ('-i', '--id', dict(dest="identifier", help="Make postage of a single paper given by its arxiv id", default='None', type='str')),
             ('-a', '--authors', dict(dest="hl_authors", help="Highlight specific authors", default='None', type='str')),
             ('-d', '--date', dict(dest="date", help="Impose date on the printouts (e.g., today)", default='', type='str')),
@@ -1451,7 +1451,7 @@ def main(template=None):
     catchup_since = options.get('since', None)
     select_main = options.get('select_main', False)
 
-    mitarbeiter_list = options.get('mitarbeiter', './mitarbeiter.txt')
+    mitarbeiter_list = options.get('mitarbeiter', __ROOT__+'/mitarbeiter.txt')
     mitarbeiter = get_mitarbeiter(mitarbeiter_list)
 
     if sourcedir not in (None, ''):
