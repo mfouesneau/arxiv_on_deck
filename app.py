@@ -337,8 +337,6 @@ def get_latex_macros(data):
                    if len(balanced_braces(k)) > 0]
     macros += '\n'.join(defs)
     print('*** Found macros and definitions in the header: ')
-    print(macros)
-    input('inspect macros')
     return macros
 
 
