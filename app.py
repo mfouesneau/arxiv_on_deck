@@ -1236,7 +1236,8 @@ class ArXivPaper(object):
         s.compile(template=template)
         identifier = self.identifier.split(':')[-1]
         name = s.outputname.replace('.tex', '.pdf').split('/')[-1]
-        shutil.move(__ROOT__ + '/tmp/' + name, identifier + '.pdf')
+        shutil.copy2(__ROOT__ + '/tmp/' + name, identifier + '.pdf')
+        shutil.copy2(__ROOT__ + '/' + name, identifier + '.pdf')
         print("PDF postage:", identifier + '.pdf' )
 
 
