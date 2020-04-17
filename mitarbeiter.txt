@@ -122,7 +122,6 @@ Jung
 Kacharov
 Kainulainen
 Keck
-Kemmer
 Keppler
 Klaas
 Klahr
@@ -138,7 +137,6 @@ Krause
 Krautgasser
 Kreckel
 Krieger
-Kruijssen
 Kulas
 Kürster
 Kuerster
@@ -177,7 +175,6 @@ Mathar
 Maurer
 Mazzucchelli
 McGurk
-Meidt
 Meisenheimer
 Meissner
 Meister
@@ -317,7 +314,6 @@ Popping
 Saiko
 Uzgil
 Zinger
-Espinoza
 Henshaw
 Parmentier
 Rodenkirch
