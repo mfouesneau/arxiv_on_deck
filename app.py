@@ -1041,7 +1041,7 @@ class ArxivAbstractHTMLParser(HTMLParser):
             if "searchtype=author" in attrs[0][1]:
             # if '/find/astro-ph/1/au:' in attrs[0][1]:
                 self._author_tag = True
-        if len(attrs)>0 and tag == 'blockquote':
+        if tag == 'blockquote':
             self._abstract_tag = True
         try:
             if tag == 'td' and 'tablecell comments' in attrs[0][1]:
