@@ -1035,30 +1035,24 @@ class ArxivAbstractHTMLParser(HTMLParser):
         self.authors = []
 
     def handle_starttag(self, tag, attrs):
-        if tag == 'h1':
+        self._starttag = tag
+        self._attrs = attrs
+        if tag == 'h1' and len(attrs)>=1:
             self._title_tag = True
         if (tag == 'a') & (len(attrs) > 0):
-            if "searchtype=author" in attrs[0][1]:
+            if len(attrs) > 0 and "searchtype=author" in attrs[0]:
             # if '/find/astro-ph/1/au:' in attrs[0][1]:
                 self._author_tag = True
         if tag == 'blockquote':
             self._abstract_tag = True
-
         try:
-            if 'tablecell comments' in attrs[0][1]:
+            if len(attrs) > 0 and 'tablecell comments' in attrs[0]:
                 self._comment_tag = True
         except IndexError:
             pass
 
-    def handle_endtag(self, tag):
-        if tag == 'h1':
-            self._title_tag = False
-        if tag == 'a':
-            self._author_tag = False
-        if tag == 'blockquote':
-            self._abstract_tag = False
-
     def handle_data(self, data):
+        self._data = data
         if self._title_tag and ('Title:' not in data):
             self.title = data.replace('\n', ' ').strip()
         if self._author_tag:
@@ -1072,6 +1066,15 @@ class ArxivAbstractHTMLParser(HTMLParser):
             self._comment_tag = False
         if 'Submitted on' in data:
             self.date = data.strip()
+
+    def handle_endtag(self, tag):
+        self.tag = tag
+        if tag == 'h1':
+            self._title_tag = False
+        if tag == 'a':
+            self._author_tag = False
+        if tag == 'blockquote':
+            self._abstract_tag = False
 
 
 class ArxivListHTMLParser(HTMLParser):
