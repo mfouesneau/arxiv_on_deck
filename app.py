@@ -1035,7 +1035,7 @@ class ArxivAbstractHTMLParser(HTMLParser):
         self.authors = []
 
     def handle_starttag(self, tag, attrs):
-        if len(attrs)>0 and tag == 'h1':
+        if tag == 'h1':
             self._title_tag = True
         if (tag == 'a') & (len(attrs) > 0):
             if "searchtype=author" in attrs[0][1]:
