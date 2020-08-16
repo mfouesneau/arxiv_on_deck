@@ -140,7 +140,7 @@ def main(template=None):
         return 
     elif identifier in (None, '', 'None'):
         if catchup_since not in (None, '', 'None', 'today'):
-            papers = get_catchup_papers(skip_replacements=True)
+            papers = get_catchup_papers(since=catchup_since, skip_replacements=True)
         else:
             papers = get_new_papers(skip_replacements=True, appearedon=check_date(options.get('date')))
         keep, matched_authors = filter_papers(papers, mitarbeiter)
