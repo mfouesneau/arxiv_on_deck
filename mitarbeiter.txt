@@ -1,6 +1,5 @@
+# Special characters in utf
 # https://www.i18nqa.com/debug/utf8-debug.html
-# grep -wf MPIA_mitarbeiter.lst aph.html >> match
-# date "+%Y%m%d 3" >> stats.dat # 3 is the number of papers.
 Abreu
 Adler
 Ahmadi
